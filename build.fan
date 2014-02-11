@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afColdFeet"
 		summary = "(Internal) An asset caching strategy for your Bed App"
-		version = Version("0.0.2")
+		version = Version("0.0.3")
 
 		meta	= [
 			"org.name"		: "Alien-Factory",
