@@ -1,17 +1,27 @@
+using concurrent
 using afIoc
 using afIocConfig::Config
 using afIocEnv
 using afBedSheet
 
+** (Service) - Creates client-side asset URIs. 
 const mixin ColdFeet {
 
+	** Converts the given URI into a 'Cold Feet' URI. 
+	** The URI **must** exist on the file system and be mapped by [BedSheet's]`http://www.fantomfactory.org/pods/afBedSheet`
+	** 'FileHandler' service.
 	abstract Uri assetUri(Uri uri)
 	
+	@NoDoc
 	abstract File? assetFile(File asset)
+	
+	@NoDoc
+	abstract Uri clientUri(Str checksum, Uri absUri)
 }
 
-const class ColdFeetImpl : ColdFeet {
+internal const class ColdFeetImpl : ColdFeet {
 	@Inject private const FileHandler		fileHandler
+	@Inject private const HttpRequest		httpRequest
 	@Inject private const ChecksumStrategy	checksumStrategy
 	
 	@Config { id="afColdFeet.assetPrefix" }
@@ -35,13 +45,18 @@ const class ColdFeetImpl : ColdFeet {
 		if (!file.exists)
 			throw ArgErr(ErrMsgs.assetUriDoesNotExist(uri, file))
 		
-		checksum := checksumStrategy.checksum(file).toUri.plusSlash
-		
-		return assetPrefix + checksum + uri.toStr[1..-1].toUri
+		checksum := checksumStrategy.checksum(file)
+		return clientUri(checksum, uri)
 	}
 	
 	override File? assetFile(File asset) {
 		throw Err("Not implemented")
+	}
+	
+	override Uri clientUri(Str checksum, Uri absUri) {
+		// add extra WebMod paths - but only if we're part of a web request!
+		clientUri := (Actor.locals["web.req"] != null && httpRequest.modBase != `/`) ? httpRequest.modBase : ``
+		return clientUri.plusSlash + assetPrefix.relTo(`/`).plusSlash + checksum.toUri.plusSlash + absUri.relTo(`/`)
 	}
 	
 	// TODO: Move to  BedSheet::FileHandler

@@ -2,6 +2,9 @@ using afIoc
 using afIocConfig
 using afBedSheet
 
+** The [Ioc]`http://www.fantomfactory.org/pods/afIoc` module class.
+** 
+** This class is public so it may be referenced explicitly in test code.
 const class ColdFeetModule {
 	
 	static Void bind(ServiceBinder binder) {
@@ -16,13 +19,14 @@ const class ColdFeetModule {
 	}
 	
 	@Contribute { serviceType=FactoryDefaults# }
-	internal static Void contributeFactoryDefaults(MappedConfig config) {
+	static Void contributeFactoryDefaults(MappedConfig config) {
 		config[ColdFeetConfigIds.assetPrefix] 	= `/coldFeet/`
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
 	static Void contributeRegistryStartup(OrderedConfig conf, IocConfigSource iocConfig) {
 		conf.add |->| {
+			// validate asset prefix
 			assetPrefix := (Uri) iocConfig.get(ColdFeetConfigIds.assetPrefix, Uri#)
 			if (!assetPrefix.isPathOnly)
 				throw ParseErr(ErrMsgs.assetPrefixMustBePathOnly(assetPrefix))

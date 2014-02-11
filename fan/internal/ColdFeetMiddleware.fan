@@ -12,6 +12,7 @@ internal const class ColdFeetMiddleware : Middleware {
 	@Inject private const FileHandler			fileHandler
 	@Inject private const ResponseProcessors	processors
 	@Inject private const IocEnv				iocEnv
+	@Inject private const ColdFeet				coldFeet
 	
 	@Config { id="afColdFeet.assetPrefix" }
 	@Inject private const Uri					assetPrefix 
@@ -36,8 +37,8 @@ internal const class ColdFeetMiddleware : Middleware {
 		checksum	:= checksumStrategy.checksum(assetFile)
 
 		if (uriChecksum != checksum) {
-			realAssetUri := assetPrefix + checksum.toUri.plusSlash + assetUri.toStr[1..-1].toUri
-			return processors.processResponse(Redirect.movedPermanently(realAssetUri))
+			clientUri := coldFeet.clientUri(checksum, assetUri)
+			return processors.processResponse(Redirect.movedPermanently(clientUri))
 		}
 
 		if (assetFile.exists && iocEnv.isProd) {
@@ -47,8 +48,8 @@ internal const class ColdFeetMiddleware : Middleware {
 		
 		return processors.processResponse(assetFile)
 	}
-	
-	// TODO: Move to  BedSheet::FileHandler
+
+	// TODO: Move to BedSheet::FileHandler
 	** Returns the URI with the closest / deepest match.
 	internal static Uri? matchPrefix(Uri[] keys, Str uri) {
 		keys.findAll { uri.startsWith(it.toStr) }.sort |u1, u2 -> Int| { u1.toStr.size <=> u2.toStr.size }.last
