@@ -15,7 +15,7 @@ internal const class ChecksumFromAppVersion : ChecksumStrategy {
 	private const Str appVersion
 	
 	new make(IocEnv iocEnv, BedSheetMetaData meta) {
-		this.appVersion = iocEnv.isDev ? Int.random.toHex(8) : "v" + meta.appPod?.version?.segments?.join("-")
+		this.appVersion = iocEnv.isDev ? Int.random.toHex(8)[0..8] : "v" + meta.appPod?.version?.segments?.join("-")
 	}
 
 	override Str checksum(File file) {

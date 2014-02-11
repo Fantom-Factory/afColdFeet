@@ -39,7 +39,7 @@ internal const class ColdFeetImpl : ColdFeet {
 		if (matchedUri == null)
 			throw NotFoundErr(ErrMsgs.assetUriNotMapped(uri), fileHandler.directoryMappings.keys)
 		
-		remainingUri := uri.getRange(matchedUri.path.size..-1)
+		remainingUri := uri.getRange(matchedUri.path.size..-1).relTo(`/`)
 		file := fileHandler.directoryMappings[matchedUri].plus(remainingUri, false)
 
 		if (!file.exists)
