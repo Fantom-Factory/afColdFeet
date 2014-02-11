@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afColdFeet"
 		summary = "(Internal) An asset caching strategy for your Bed App"
-		version = Version("0.0.1")
+		version = Version("0.0.2")
 
 		meta	= [
 			"org.name"		: "Alien-Factory",
@@ -14,7 +14,9 @@ class Build : BuildPod {
 			"proj.uri"		: "http://repo.status302.com/doc/afColdFeet",
 			"vcs.uri"		: "https://bitbucket.org/Alien-Factory/afcoldfeet",
 			"license.name"	: "The MIT Licence",	
-			"repo.private"	: "true"
+			"repo.private"	: "true",
+			
+			"afIoc.module"	: "afColdFeet::ColdFeetModule"
 		]
 
 		depends = [
