@@ -1,0 +1,18 @@
+
+Have IocConfig log values on startup (showing factory overrides)
+
+For 1.0.0
+=========
+
+Move version into a HashStrategy - create Alder32 hashes
+
+http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/Assets-update-td5720464.html#a5720492
+
+
+http://en.wikipedia.org/wiki/Adler32
+limit?
+http://stackoverflow.com/questions/122982/robust-and-fast-checksum-algorithm#answer-123098
+
+For Future
+==========
+

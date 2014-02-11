@@ -1,0 +1,50 @@
+Overview [#overview]
+********************
+*'Cold Feet' is a support library that aids Alien-Factory in the development of libraries, frameworks and applications.
+Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
+
+'Cold Feet' is an asset caching strategy for your Bed App.
+
+Tired of telling your clients to refresh their browser to pick up the latest CSS and Javascript changes?
+Don't want browser cache busting because it's lame and you need performance?
+Then get 'Cold Feet'!
+
+
+
+Install [#Install]
+******************
+Install 'Cold Feet' with the Fantom Repository Manager ( [fanr]`http://fantom.org/doc/docFanr/Tool.html#install` ):
+
+  $ fanr install -r http://repo.status302.com/fanr/ afColdFeet
+
+To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
+
+  depends = ["sys 1.0", ..., "afColdFeet 0+"]
+
+
+
+Quick Start [#quickStart]
+*************************
+pre>
+  Example here
+<pre
+
+
+
+Usage [#usage]
+**************
+
+thus , when When the version changes, clients download new versions of your assets.
+
+browser aggressively cache the file (using both E-Tags and a far-future expires header)
+far-future expires header
+Far reaching expiry header
+
+Defaults to the application's pod version in production, and a random string in development / test.
+
+Release Notes [#releaseNotes]
+*****************************
+
+v0.0.2 [#v0.0.2]
+----------------
+ - New: Preview Release
