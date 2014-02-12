@@ -36,39 +36,13 @@ internal const class ColdFeetImpl : ColdFeet {
 	new make(|This|in) { in(this) }
 	
 	override Uri assetUri(Uri uri) {
-		if (!uri.isPathOnly)
-			throw ArgErr(ErrMsgs.assetUriMustBePathOnly(uri))
-		if (!uri.isPathAbs)
-			throw ArgErr(ErrMsgs.assetUriMustStartWithSlash(uri))
-
-		// TODO: create an easy method in file handler
-		matchedUri := matchPrefix(fileHandler.directoryMappings.keys, uri.toStr)
-		if (matchedUri == null)
-			throw NotFoundErr(ErrMsgs.assetUriNotMapped(uri), fileHandler.directoryMappings.keys)
-		
-		remainingUri := uri.getRange(matchedUri.path.size..-1).relTo(`/`)
-		file := fileHandler.directoryMappings[matchedUri].plus(remainingUri, false)
-
-		if (!file.exists)
-			throw ArgErr(ErrMsgs.assetUriDoesNotExist(uri, file))
-		
+		file	 := fileHandler.fromClientUri(uri, true)
 		checksum := checksumStrategy.checksum(file)
 		return clientUri(checksum, uri)
 	}
 	
 	override Uri assetFile(File asset) {
-		if (asset.isDir)
-			throw ArgErr(ErrMsgs.assetFileIsDir(asset))
-		if (!asset.exists)
-			throw ArgErr(ErrMsgs.assetFileDoesNotExist(asset))
-		
-		// TODO: create a method in FileHandler
-		// TODO: normalise all the files in directoryMappings
-		assetUriStr := asset.normalize.uri.toStr
-		matchedUri  := fileHandler.directoryMappings.findAll |file, uri->Bool| { assetUriStr.startsWith(file.normalize.uri.toStr) }.keys.sort |u1, u2 -> Int| { u1.toStr.size <=> u2.toStr.size }.last
-		matchedFile := fileHandler.directoryMappings[matchedUri].normalize
-		remaining	:= assetUriStr[matchedFile.uri.toStr.size..-1]
-		assetUri	:= matchedUri + remaining.toUri
+		assetUri	:= fileHandler.fromServerFile(asset)
 		checksum 	:= checksumStrategy.checksum(asset)
 		return clientUri(checksum, assetUri)
 	}
@@ -77,11 +51,5 @@ internal const class ColdFeetImpl : ColdFeet {
 		// add extra WebMod paths - but only if we're part of a web request!
 		clientUri := (Actor.locals["web.req"] != null && httpRequest.modBase != `/`) ? httpRequest.modBase : ``
 		return clientUri.plusSlash + assetPrefix.relTo(`/`).plusSlash + checksum.toUri.plusSlash + absUri.relTo(`/`)
-	}
-	
-	// TODO: Move to  BedSheet::FileHandler
-	** Returns the URI with the closest / deepest match.
-	internal static Uri? matchPrefix(Uri[] keys, Str uri) {
-		keys.findAll { uri.startsWith(it.toStr) }.sort |u1, u2 -> Int| { u1.toStr.size <=> u2.toStr.size }.last
 	}
 }

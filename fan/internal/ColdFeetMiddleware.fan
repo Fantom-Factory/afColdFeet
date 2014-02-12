@@ -24,34 +24,27 @@ internal const class ColdFeetMiddleware : Middleware {
 		if (!reqUri.toStr.lower.startsWith(assetPrefix.toStr.lower) || reqUri.path.size <= 2)
 			return pipeline.service
 
-		uriNoPrefix	:= reqUri.toStr[assetPrefix.toStr.size..-1].toUri
-		assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)
-		uriChecksum	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
-		matchedUri	:= matchPrefix(fileHandler.directoryMappings.keys, assetUri.toStr)
-
-		if (matchedUri == null)
-			return pipeline.service			
-
-		remainUri	:= assetUri.toStr[matchedUri.toStr.size..-1].toUri
-		assetFile 	:= fileHandler.directoryMappings[matchedUri].plus(remainUri, false)
-		checksum	:= checksumStrategy.checksum(assetFile)
-
-		if (uriChecksum != checksum) {
-			clientUri := coldFeet.clientUri(checksum, assetUri)
-			return processors.processResponse(Redirect.movedPermanently(clientUri))
-		}
-
-		if (assetFile.exists && iocEnv.isProd) {
-			// yeah, a far future expiration header! 10 years baby!
-			res.headers.expires = DateTime.now.plus(365day * 10)
-		}
-		
-		return processors.processResponse(assetFile)
-	}
-
-	// TODO: Move to BedSheet::FileHandler
-	** Returns the URI with the closest / deepest match.
-	internal static Uri? matchPrefix(Uri[] keys, Str uri) {
-		keys.findAll { uri.startsWith(it.toStr) }.sort |u1, u2 -> Int| { u1.toStr.size <=> u2.toStr.size }.last
+		try {
+			uriNoPrefix	:= reqUri.toStr[assetPrefix.toStr.size..-1].toUri
+			uriChecksum	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
+			assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)	
+			assetFile	:= fileHandler.fromClientUri(assetUri, true)
+			checksum	:= checksumStrategy.checksum(assetFile)
+	
+			if (uriChecksum != checksum) {
+				clientUri := coldFeet.clientUri(checksum, assetUri)
+				return processors.processResponse(Redirect.movedPermanently(clientUri))
+			}
+	
+			if (assetFile.exists && iocEnv.isProd) {
+				// yeah, a far future expiration header! 10 years baby!
+				res.headers.expires = DateTime.now.plus(365day * 10)
+			}
+			
+			return processors.processResponse(assetFile)
+			
+		} catch (Err e)
+			// if there's something wrong with the URI, return a 404
+			return pipeline.service
 	}
 }
