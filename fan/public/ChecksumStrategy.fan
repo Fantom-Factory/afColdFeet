@@ -11,7 +11,8 @@ const mixin ChecksumStrategy {
 	
 }
 
-internal const class ChecksumFromAppVersion : ChecksumStrategy {
+** A `ChecksumStrategy` that returns the application's version number in production, and a random string in development.
+const class ChecksumFromAppVersion : ChecksumStrategy {
 	private const Str appVersion
 	
 	new make(IocEnv iocEnv, BedSheetMetaData meta) {
@@ -23,8 +24,8 @@ internal const class ChecksumFromAppVersion : ChecksumStrategy {
 	}
 }
 
-@NoDoc
-const class ChecksumFromConst : ChecksumStrategy {
+** A `ChecksumStrategy` that returns a constant value - use during testing.
+const class ChecksumFromConstValue : ChecksumStrategy {
 	private const Str myChecksum
 	
 	new make(Str myChecksum) {

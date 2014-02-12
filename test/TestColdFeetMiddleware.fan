@@ -75,7 +75,7 @@ internal class T_Module04 {
 	}
 	@Contribute { serviceType=ServiceOverride# }
 	static Void contributeOverrides(MappedConfig config) {
-		config[ChecksumStrategy#] = ChecksumFromConst("checksum")
+		config[ChecksumStrategy#] = ChecksumFromConstValue("checksum")
 	}
 	@Contribute { serviceType=Routes# }
 	internal static Void contributeRoutes(OrderedConfig config) {

@@ -39,6 +39,26 @@ internal class TestColdFeetService : ColdFeetTest {
 		verifyEq(uri, `/coldFeet/ver/not-here/pod.fandoc`)
 	}	
 	
+	Void testAssetFileIsDir() {
+		coldFeet := (ColdFeet) BedServer(ColdFeetModule#).addModule(T_Module05#).startup.dependencyByType(ColdFeet#)
+		verifyErrTypeAndMsg(ArgErr#, ErrMsgs.assetFileIsDir(`doc/`.toFile)) {
+			uri := coldFeet.assetFile(`doc/`.toFile)
+		}
+	}	
+	
+	Void testAssetFileDoesNotExist() {
+		coldFeet := (ColdFeet) BedServer(ColdFeetModule#).addModule(T_Module05#).startup.dependencyByType(ColdFeet#)
+		verifyErrTypeAndMsg(ArgErr#, ErrMsgs.assetFileDoesNotExist(`doc/booyaa.txt`.toFile)) {
+			uri := coldFeet.assetFile(`doc/booyaa.txt`.toFile)
+		}
+	}
+	
+	Void testAssetFile() {
+		coldFeet := (ColdFeet) BedServer(ColdFeetModule#).addModule(T_Module05#).startup.dependencyByType(ColdFeet#)
+		uri := coldFeet.assetFile(`doc/pod.fandoc`.toFile)
+		verifyEq(uri, `/coldFeet/ver/not-here/pod.fandoc`)
+	}
+	
 }
 
 internal class T_Module05 {
@@ -48,6 +68,6 @@ internal class T_Module05 {
 	}
 	@Contribute { serviceType=ServiceOverride# }
 	static Void contributeOverrides(MappedConfig config) {
-		config[ChecksumStrategy#] = ChecksumFromConst("ver")
+		config[ChecksumStrategy#] = ChecksumFromConstValue("ver")
 	}
 }
