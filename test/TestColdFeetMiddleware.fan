@@ -54,7 +54,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 		
 		res := client.get(`/coldFeet/checksum/doc/pod.fandoc`)
 		verifyEq(res.statusCode, 200)
-		verifyEq(res.headers.expires.toHttpStr, expiresInTenYears.toHttpStr)
+		verifyEq(res.headers.expires.floor(1min).toHttpStr, expiresInTenYears.floor(1min).toHttpStr)
 	}
 
 	override Void setup() {

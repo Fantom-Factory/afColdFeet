@@ -16,6 +16,9 @@ internal const class ColdFeetMiddleware : Middleware {
 	
 	@Config { id="afColdFeet.assetPrefix" }
 	@Inject private const Uri					assetPrefix 
+
+	@Config { id="afColdFeet.assetExpiresIn" }
+	@Inject private const Duration				expiresIn 
 	
 	new make(|This|in) { in(this) }
 
@@ -38,7 +41,7 @@ internal const class ColdFeetMiddleware : Middleware {
 	
 			if (assetFile.exists && iocEnv.isProd) {
 				// yeah, a far future expiration header! 10 years baby!
-				res.headers.expires = DateTime.now.plus(365day * 10)
+				res.headers.expires = DateTime.now.plus(expiresIn)
 			}
 			
 			return processors.processResponse(assetFile)

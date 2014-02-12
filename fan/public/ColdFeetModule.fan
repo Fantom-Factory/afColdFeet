@@ -20,7 +20,8 @@ const class ColdFeetModule {
 	
 	@Contribute { serviceType=FactoryDefaults# }
 	static Void contributeFactoryDefaults(MappedConfig config) {
-		config[ColdFeetConfigIds.assetPrefix] 	= `/coldFeet/`
+		config[ColdFeetConfigIds.assetPrefix] 		= `/coldFeet/`
+		config[ColdFeetConfigIds.assetExpiresIn] 	= 365day * 10
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
