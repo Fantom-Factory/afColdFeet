@@ -9,4 +9,8 @@ mixin ColdFeetConfigIds {
 	** Defaults to '/coldFeet/'. Boring people may wish to change this to '/assets/'.
 	static const Str assetPrefix	:= "afColdFeet.assetPrefix"
 
+	** A 'Duration' specifying how long clients should cache assets for. 
+	** 
+	** Defaults to an aggressive 10 years: '365day * 10'
+	static const Str assetExpiresIn	:= "afColdFeet.assetExpiresIn"
 }

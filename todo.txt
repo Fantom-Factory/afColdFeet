@@ -3,14 +3,12 @@ Have IocConfig log values on startup (showing factory overrides)
 
 For 1.0.0
 =========
-Turn 10 years into a config value
 
+For Future
+==========
 Create an Alder32 Checksum strategy
 http://en.wikipedia.org/wiki/Adler32
 http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/Assets-update-td5720464.html#a5720492
 
 But that won't work with relative URIs in CSS files... :(   Hence T5 did the regex parsing.
-
-For Future
-==========
 
