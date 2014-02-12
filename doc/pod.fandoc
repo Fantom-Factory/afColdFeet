@@ -25,6 +25,9 @@ To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan
 
 Usage [#usage]
 **************
+Contribute your asset directories to the [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` FileHandler service as usual,
+but rather than hard-coding the asset URIs, let 'Cold Feet' generate them for you.
+
 Use the `ColdFeet` service to convert your asset URIs, such as '/css/myStyles.css', to a Cold Feet URI like '/coldFeet/XXXX/css/myStyles.css', where:
 
  - '/coldFeet' is a prefix used to identify the URI on incoming requests.
@@ -44,13 +47,29 @@ asset URI.
 
 Checksum Strategies [#checksum]
 *******************************
-
 App Version [#appVersion]
 =========================
-This simple strategy (currently the default) ignores the asset file in question and returns the application's pod version.
-Thus, when a new application is deployed (with an updated version), all clients will re-download the assets.
+This simple strategy (currently the default) actually ignores the asset file in question and instead returns the
+application's pod version.
+Thus, when a new application is deployed (with an new version), clients will re-download all the assets.
 
 When not in production mode, the checksum defaults to a random string and the expiration header is disabled.
+
+
+
+Const Value [#constValue]
+=========================
+Use this strategy in testing. It returns a set constant value each and every time.
+To use, override the default App Version implementation in your 'AppModule':
+
+pre>
+class AppModule {
+    @Contribute { serviceType=ServiceOverride# }
+    static Void contributeOverrides(MappedConfig config) {
+        config[ChecksumStrategy#] = ChecksumFromConstValue("XXX")
+    }
+}
+<pre
 
 
 

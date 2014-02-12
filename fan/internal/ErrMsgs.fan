@@ -28,5 +28,13 @@ internal const class ErrMsgs {
 	static Str assetUriDoesNotExist(Uri assetUri, File file) {
 		"Asset URI `${assetUri}` does not exist -> ${file.normalize.osPath}"
 	}
+
+	static Str assetFileIsDir(File assetFile) {
+		"Asset File `${assetFile.normalize.osPath}` is a directory!?"
+	}
+	
+	static Str assetFileDoesNotExist(File assetFile) {
+		"Asset File `${assetFile.normalize.osPath}` does not exist."
+	}
 	
 }
