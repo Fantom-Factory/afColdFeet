@@ -1,12 +1,9 @@
 Overview [#overview]
 ********************
-*'Cold Feet' is a support library that aids Alien-Factory in the development of libraries, frameworks and applications.
-Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
-
 'Cold Feet' is an asset caching strategy for your [Bed App]`http://www.fantomfactory.org/pods/afBedSheet`.
 
- - Tired of telling your clients to clear their cache to pick up the latest CSS and Javascript changes?
- - Don't want to use lame browser cache busting because you need network performance?
+ - Tired of telling clients to clear their browser cache to pick up the latest CSS and Javascript changes?
+ - Don't want lame browser cache busting because you need network performance?
  - Then get 'Cold Feet'!
 
 

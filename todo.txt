@@ -1,12 +1,10 @@
 
-Have IocConfig log values on startup (showing factory overrides)
-
 For 1.0.0
 =========
 
 For Future
 ==========
-Create an Alder32 Checksum strategy
+Create an Alder32 Checksum strategy for individual assets
 http://en.wikipedia.org/wiki/Adler32
 http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/Assets-update-td5720464.html#a5720492
 
