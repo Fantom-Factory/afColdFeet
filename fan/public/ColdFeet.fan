@@ -22,7 +22,7 @@ const mixin ColdFeet {
 	abstract Uri assetFile(File asset)
 	
 	@NoDoc
-	abstract Uri clientUri(Str checksum, Uri absUri)
+	abstract Uri clientUri(Str digest, Uri absUri)
 }
 
 internal const class ColdFeetImpl : ColdFeet {
@@ -36,20 +36,20 @@ internal const class ColdFeetImpl : ColdFeet {
 	new make(|This|in) { in(this) }
 	
 	override Uri assetUri(Uri uri) {
-		asset	 := fileHandler.fromClientUri(uri, true)
-		checksum := digestStrategy.digest(asset)
-		return clientUri(checksum, uri)
+		asset	:= fileHandler.fromClientUri(uri, true)
+		digest	:= digestStrategy.digest(asset)
+		return clientUri(digest, uri)
 	}
 	
 	override Uri assetFile(File asset) {
-		assetUri	:= fileHandler.fromServerFile(asset)
-		checksum 	:= digestStrategy.digest(asset)
-		return clientUri(checksum, assetUri)
+		uri		:= fileHandler.fromServerFile(asset)
+		digest	:= digestStrategy.digest(asset)
+		return clientUri(digest, uri)
 	}
 
-	override Uri clientUri(Str checksum, Uri absUri) {
+	override Uri clientUri(Str digest, Uri absUri) {
 		// add extra WebMod paths - but only if we're part of a web request!
 		clientUri := (Actor.locals["web.req"] != null && httpRequest.modBase != `/`) ? httpRequest.modBase : ``
-		return clientUri.plusSlash + assetPrefix.relTo(`/`).plusSlash + checksum.toUri.plusSlash + absUri.relTo(`/`)
+		return clientUri.plusSlash + assetPrefix.relTo(`/`).plusSlash + digest.toUri.plusSlash + absUri.relTo(`/`)
 	}
 }

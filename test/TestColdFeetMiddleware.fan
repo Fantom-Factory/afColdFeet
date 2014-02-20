@@ -76,13 +76,10 @@ internal class T_Module04 {
 	@Contribute { serviceType=ServiceOverride# }
 	static Void contributeOverrides(MappedConfig config) {
 		config[DigestStrategy#] = FixedValueDigest("checksum")
+        config["IocEnv"] 		= IocEnv.fromStr("Prod")
 	}
 	@Contribute { serviceType=Routes# }
 	internal static Void contributeRoutes(OrderedConfig config) {
 		config.add(Route(`/index.html`, Text.fromPlain("Terminated")))
 	}
-    @Contribute { serviceType=ServiceOverride# }
-    static Void contributeServiceOverride(MappedConfig config) {
-        config["IocEnv"] = IocEnv.fromStr("Prod")
-    }
 }
