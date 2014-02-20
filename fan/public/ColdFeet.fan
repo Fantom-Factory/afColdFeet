@@ -28,7 +28,7 @@ const mixin ColdFeet {
 internal const class ColdFeetImpl : ColdFeet {
 	@Inject private const FileHandler		fileHandler
 	@Inject private const HttpRequest		httpRequest
-	@Inject private const ChecksumStrategy	checksumStrategy
+	@Inject private const DigestStrategy	digestStrategy
 	
 	@Config { id="afColdFeet.assetPrefix" }
 	@Inject private const Uri				assetPrefix 
@@ -36,14 +36,14 @@ internal const class ColdFeetImpl : ColdFeet {
 	new make(|This|in) { in(this) }
 	
 	override Uri assetUri(Uri uri) {
-		file	 := fileHandler.fromClientUri(uri, true)
-		checksum := checksumStrategy.checksum(file)
+		asset	 := fileHandler.fromClientUri(uri, true)
+		checksum := digestStrategy.digest(asset)
 		return clientUri(checksum, uri)
 	}
 	
 	override Uri assetFile(File asset) {
 		assetUri	:= fileHandler.fromServerFile(asset)
-		checksum 	:= checksumStrategy.checksum(asset)
+		checksum 	:= digestStrategy.digest(asset)
 		return clientUri(checksum, assetUri)
 	}
 

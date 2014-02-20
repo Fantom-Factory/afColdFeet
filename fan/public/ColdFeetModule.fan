@@ -10,7 +10,7 @@ const class ColdFeetModule {
 	static Void bind(ServiceBinder binder) {
 		binder.bind(ColdFeet#)
 		binder.bind(ColdFeetMiddleware#)
-		binder.bind(ChecksumStrategy#, ChecksumFromAppVersion#)
+		binder.bind(DigestStrategy#, AppVersionDigest#)
 	}
 	
 	@Contribute { serviceType=MiddlewarePipeline# }

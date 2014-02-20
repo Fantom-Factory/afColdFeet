@@ -25,6 +25,6 @@ internal class T_Module05 {
 	}
 	@Contribute { serviceType=ServiceOverride# }
 	static Void contributeOverrides(MappedConfig config) {
-		config[ChecksumStrategy#] = ChecksumFromConstValue("ver")
+		config[DigestStrategy#] = FixedValueDigest("ver")
 	}
 }

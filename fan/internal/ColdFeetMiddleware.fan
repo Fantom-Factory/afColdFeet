@@ -6,7 +6,7 @@ using afBedSheet
 
 internal const class ColdFeetMiddleware : Middleware {
 
-	@Inject private const ChecksumStrategy		checksumStrategy
+	@Inject private const DigestStrategy		digestStrategy
 	@Inject private const HttpRequest			req
 	@Inject private const HttpResponse			res
 	@Inject private const FileHandler			fileHandler
@@ -32,7 +32,7 @@ internal const class ColdFeetMiddleware : Middleware {
 			uriChecksum	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
 			assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)	
 			assetFile	:= fileHandler.fromClientUri(assetUri, true)
-			checksum	:= checksumStrategy.checksum(assetFile)
+			checksum	:= digestStrategy.digest(assetFile)
 	
 			if (uriChecksum != checksum) {
 				clientUri := coldFeet.clientUri(checksum, assetUri)

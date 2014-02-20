@@ -4,7 +4,7 @@ class Build : BuildPod {
 
 	new make() {
 		podName = "afColdFeet"
-		summary = "An asset caching strategy for your Bed App"
+		summary = "(Internal) An asset caching strategy for your Bed App"
 		version = Version("1.0.1")
 
 		meta	= [
@@ -12,10 +12,10 @@ class Build : BuildPod {
 			"org.uri"		: "http://www.alienfactory.co.uk/",
 			"proj.name"		: "Cold Feet",
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afColdFeet",
-			"vcs.uri"		: "https://bitbucket.org/Alien-Factory/afcoldfeet",
+			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afcoldfeet",
 			"license.name"	: "The MIT Licence",	
 			"repo.private"	: "true",
-			
+
 			"afIoc.module"	: "afColdFeet::ColdFeetModule"
 		]
 
