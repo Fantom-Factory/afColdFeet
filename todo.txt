@@ -2,6 +2,8 @@
 For 1.0.0
 =========
 
+Allow ?query-params for assets
+
 For Future
 ==========
 Create an Alder32 Checksum strategy for individual assets
