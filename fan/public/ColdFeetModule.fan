@@ -5,14 +5,15 @@ using afBedSheet
 ** The [Ioc]`http://www.fantomfactory.org/pods/afIoc` module class.
 ** 
 ** This class is public so it may be referenced explicitly in test code.
+@NoDoc
 const class ColdFeetModule {
 	
 	static Void bind(ServiceBinder binder) {
 		binder.bind(ColdFeet#)
 		binder.bind(ColdFeetMiddleware#)
-		binder.bind(DigestStrategy#, AppVersionDigest#)
+		binder.bind(DigestStrategy#, Adler32Digest#)
 	}
-	
+
 	@Contribute { serviceType=MiddlewarePipeline# }
 	internal static Void contributeMiddlewarePipeline(OrderedConfig config, ColdFeetMiddleware middleware) {
 		config.addOrdered("ColdFeet", middleware, ["BEFORE: Routes"])

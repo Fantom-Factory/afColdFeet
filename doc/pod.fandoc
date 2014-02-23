@@ -23,6 +23,68 @@ To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan
 
 
 
+Quick Start [#quickStart]
+*************************
+1). Create a text file called 'Example.fan':
+pre>
+using afIoc
+using afBedSheet
+using afColdFeet
+
+class Example {
+  @Inject FileHandler? fileHandler
+  @Inject ColdFeet?    coldFeet
+
+  Text coldFeetUris() {
+    msg := "Normal URI   : " + fileHandler.fromServerFile(File(`Example.fan`)).toStr + "\n"
+    msg += "Cold Feet URI: " + coldFeet.fromServerFile(File(`Example.fan`)).toStr
+    return Text.fromPlain(msg)
+  }
+}
+
+@SubModule { modules=[ColdFeetModule#] }
+class AppModule {
+  @Contribute { serviceType=Routes# }
+  static Void contributeRoutes(OrderedConfig conf) {
+    conf.add(Route(`/`, Example#coldFeetUris))
+  }
+
+  @Contribute { serviceType=FileHandler# }
+  static Void contributeFileHandler(MappedConfig config) {
+    config[`/`] = `./`
+  }
+}
+
+class Main {
+  Int main() {
+    afBedSheet::Main().main([AppModule#.qname, "8080"])
+  }
+}
+<pre
+
+2). Run 'Example.fan' as a Fantom script from the command line. This starts the [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` app server:
+pre>
+C:\> fan Example.fan
+
+   ___    __                 _____        _
+  / _ |  / /  _____  _____  / ___/__  ___/ /_________  __ __
+ / _  | / /_ / / -_|/ _  / / __// _ \/ _/ __/ _  / __|/ // /
+/_/ |_|/___//_/\__|/_//_/ /_/   \_,_/__/\__/____/_/   \_, /
+           Alien-Factory BedSheet v1.3.4, IoC v1.5.4 /___/
+
+BedSheet started up in 608ms
+
+Bed App 'Unknown' listening on http://localhost:8080/
+<pre
+
+3). Visit 'http://localhost:8080/':
+pre>
+Normal URI: /Example.fan
+Cold Feet URI: /coldFeet/RD0EXw==/Example.fan
+<pre
+
+
+
 Usage [#usage]
 **************
 Contribute your asset directories to the [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet` FileHandler service as usual,
@@ -44,19 +106,49 @@ The smart ones amongst you will be asking, *"But what if the browser requests an
 Simple, Cold Feet recognises outdated URIs and responds with a '301 - Moved Permanently' redirecting the browser to the new
 asset URI.
 
-Note the the expiration header is only enabled in production mode.
+Note that the expiration header is only enabled in production mode.
+
+
+
+Fail Fast [#failFast]
+=====================
+An understated advatange of using 'Cold Feet' is that it fails fast.
+
+Should an asset not exist on the file system (due to a bodged rename, a case sensitivity issue, or other) then 'Cold Feet' will throw an Err on the server when the browser URI is constructed.
+This allows your web tests to quickly pick up these tricky errors.
+
+The lesser appealing alternative is for the incorrect URI to be served to the browser which will subsequently recieve a '404 - Not Found'.
+While this may not seem a big deal, these errors often go unnoticed and easily find their way into production.
 
 
 
 Digest Strategies [#digests]
 ****************************
-Adler32 [#adler32]
-==================
+Adler-32 [#adler32]
+===================
 This is the default strategy used by 'Cold Feet'.
-It calculates a digest with the [Adler32]`http://en.wikipedia.org/wiki/Adler32` checksum algorithm.
+It calculates a digest with the [Adler-32]`http://en.wikipedia.org/wiki/Adler32` checksum algorithm.
 The checksum is then Base-64 encoded using the [URL and filename safe alphabet]`http://tools.ietf.org/html/rfc4648#section-5`.
 
-The Adler32 checksum was designed for speed and created for use in the [zlib]`http://en.wikipedia.org/wiki/Zlib` compression library which makes it an ideal fit for a asset digest.
+The Adler-32 checksum was designed for speed and created for use in the [zlib]`http://en.wikipedia.org/wiki/Zlib` compression library which makes it an ideal fit for an asset digest.
+
+Note that if your CSS file has a relative URL in it, such as:
+
+  .pretty-div {
+      background-image: url(../images/pretty.png);
+  }
+
+Then, under Adler-32, it will be served under the wrong digest. This is because if your CSS file is served under:
+
+  /coldFeet/x9x9x9/css/styles.css
+
+The browser will resolve 'pretty.png' to be under the same digest path:
+
+  /coldFeet/x9x9x9/css/../images/pretty.png
+
+This won't do any harm, as 'Cold Feet' will simply redirect the browser to the correct URL, but the redirect is a wasted round trip.
+As each redirect creates a warning, monitor your logs to find any missed relative URLs and correct as necessary.
+If there are many, you may wish to preprocess your CSS files to generate the Cold Feet URLS before serving.
 
 
 
@@ -101,8 +193,9 @@ Release Notes [#releaseNotes]
 *****************************
 v1.1.0 [#v1.1.0]
 ----------------
- - New: Added the Alder32 digest strategy.
+ - New: Added the Alder-32 digest strategy.
  - Chg: Renamed 'ChecksumStrategy' -> 'DigestStrategy' and renamed the implmentations to suit.
+ - Chg: Renamed the 'ColdFeet' service methods to match those in [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet`'s 'FileHandler'.
  - Chg: All redirects are logged as warnings (complete with the referer). This allows you to find any missed relative references.
 
 v1.0.0 [#v1.0.0]

@@ -7,13 +7,13 @@ internal class TestColdFeetService : ColdFeetTest {
 	
 	Void testAssetUri() {
 		coldFeet := (ColdFeet) BedServer(ColdFeetModule#).addModule(T_Module05#).startup.dependencyByType(ColdFeet#)
-		uri := coldFeet.assetUri(`/not-here/pod.fandoc`)
+		uri := coldFeet.fromClientUri(`/not-here/pod.fandoc`)
 		verifyEq(uri, `/coldFeet/ver/not-here/pod.fandoc`)
 	}	
 	
 	Void testAssetFile() {
 		coldFeet := (ColdFeet) BedServer(ColdFeetModule#).addModule(T_Module05#).startup.dependencyByType(ColdFeet#)
-		uri := coldFeet.assetFile(`doc/pod.fandoc`.toFile)
+		uri := coldFeet.fromServerFile(`doc/pod.fandoc`.toFile)
 		verifyEq(uri, `/coldFeet/ver/not-here/pod.fandoc`)
 	}
 }
