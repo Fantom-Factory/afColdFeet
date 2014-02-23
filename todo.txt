@@ -2,13 +2,5 @@
 For 1.0.0
 =========
 
-Allow ?query-params for assets
-
 For Future
 ==========
-Create an Alder32 Checksum strategy for individual assets
-http://en.wikipedia.org/wiki/Adler32
-http://apache-tapestry-mailing-list-archives.1045711.n5.nabble.com/Assets-update-td5720464.html#a5720492
-
-But that won't work with relative URIs in CSS files... :(   Hence T5 did the regex parsing.
-

@@ -27,7 +27,7 @@ internal const class ColdFeetMiddleware : Middleware {
 		reqUri := request.modRel
 		if (!reqUri.toStr.lower.startsWith(assetPrefix.toStr.lower) || reqUri.path.size <= 2)
 			return pipeline.service
-
+		
 		try {
 			uriNoPrefix	:= reqUri.toStr[assetPrefix.toStr.size..-1].toUri
 			uriDigest	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
