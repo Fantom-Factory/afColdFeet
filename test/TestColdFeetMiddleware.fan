@@ -36,7 +36,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 		client.followRedirects.enabled = false
 		
 		res := client.get(`/coldfeet/whoops/doc/pod.fandoc`)
-		verifyEq(res.statusCode, 301)
+		verifyEq(res.statusCode, 308)
 		verifyEq(res.headers.location, `/coldFeet/checksum/doc/pod.fandoc`)
 	}
 
@@ -44,6 +44,22 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 		client.followRedirects.enabled = false
 		
 		res := client.get(`/coldFeet/checksum/doc/pod.fandoc`)
+		verifyEq(res.statusCode, 200)
+		verify(res.asStr.startsWith("Overview [#overview]"))
+	}
+
+	Void testQueryParamsAreIgnored() {
+		client.followRedirects.enabled = true
+		
+		res := client.get(`/coldFeet/whoops/doc/pod.fandoc?wot`)
+		verifyEq(res.statusCode, 200)
+		verify(res.asStr.startsWith("Overview [#overview]"))
+
+		res = client.get(`/coldFeet/whoops/doc/pod.fandoc?wot&ever`)
+		verifyEq(res.statusCode, 200)
+		verify(res.asStr.startsWith("Overview [#overview]"))
+
+		res = client.get(`/coldFeet/whoops/doc/pod.fandoc#wotever`)
 		verifyEq(res.statusCode, 200)
 		verify(res.asStr.startsWith("Overview [#overview]"))
 	}
