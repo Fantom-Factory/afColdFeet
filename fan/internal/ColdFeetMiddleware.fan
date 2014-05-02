@@ -32,7 +32,7 @@ internal const class ColdFeetMiddleware : Middleware {
 			uriNoPrefix	:= reqUri.toStr[assetPrefix.toStr.size..-1].toUri
 			uriDigest	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
 			assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)	
-			assetFile	:= fileHandler.fromClientUri(assetUri, true)
+			assetFile	:= fileHandler.fromClientUri(assetUri, true)	// this line may die!
 			assDigest	:= digestStrategy.digest(assetFile)
 	
 			if (uriDigest != assDigest) {
