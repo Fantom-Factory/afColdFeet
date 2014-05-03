@@ -13,7 +13,7 @@ class Build : BuildPod {
 			"proj.name"		: "Cold Feet",
 			"proj.uri"		: "http://www.fantomfactory.org/pods/afColdFeet",
 			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afcoldfeet",
-			"license.name"	: "The MIT Licence",	
+			"license.name"	: "The MIT Licence",
 			"repo.private"	: "true",
 
 			"afIoc.module"	: "afColdFeet::ColdFeetModule"
