@@ -4,54 +4,44 @@ class Build : BuildPod {
 
 	new make() {
 		podName = "afColdFeet"
-		summary = "(Internal) An asset caching strategy for your Bed App"
-		version = Version("1.1.3")
+		summary = "An asset caching strategy for your Bed App"
+		version = Version("1.1.4")
 
 		meta = [
-			"org.name"		: "Alien-Factory",
-			"org.uri"		: "http://www.alienfactory.co.uk/",
 			"proj.name"		: "Cold Feet",
-			"proj.uri"		: "http://www.fantomfactory.org/pods/afColdFeet",
-			"vcs.uri"		: "https://bitbucket.org/AlienFactory/afcoldfeet",
-			"license.name"	: "The MIT Licence",
-			"repo.private"	: "true",
-
+			"afIoc.module"	: "afColdFeet::ColdFeetModule",
+			"internal"		: "true",
 			"tags"			: "web",
-			"afIoc.module"	: "afColdFeet::ColdFeetModule"
+			"repo.private"	: "false"
 		]
 
 		depends = [
 			"sys 1.0", 
 			"concurrent 1.0", 
 			
-			"afIoc 1.6.0+", 
-			"afIocConfig 1.0.4+", 
-			"afIocEnv 1.0.4+", 
-			"afBedSheet 1.3.6+",
+			// ---- Core ------------------------
+			"afConcurrent 1.0.6+", 
+			"afIoc 1.6.2+", 
+			"afIocConfig 1.0.6+", 
+			"afIocEnv 1.0.4+",
 			
-			"afBounce 1.0.0+",
+			// ---- Web -------------------------
+			"afBedSheet 1.3.8+",
+			
+			// ---- Test ------------------------
+			"afBounce 1.0.2+",
 			"afButter 0.0.6+"
 		]
 		
 		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/internal/`]
-		resDirs = [`licence.txt`, `doc/`]
-
-		docApi = true
-		docSrc = true
+		resDirs = [,]
 	}
 	
-	@Target { help = "Compile to pod file and associated natives" }
+	@Target
 	override Void compile() {
-		// see "stripTest" in `/etc/build/config.props` to exclude test src & res dirs
+		// remove test pods from final build
+		testPods := "afBounce afButter".split
+		depends = depends.exclude { testPods.contains(it.split.first) }
 		super.compile
-		
-		// copy src to %FAN_HOME% for F4 debugging
-		log.indent
-		destDir := Env.cur.homeDir.plus(`src/${podName}/`)
-		destDir.delete
-		destDir.create		
-		`fan/`.toFile.copyInto(destDir)		
-		log.info("Copied `fan/` to ${destDir.normalize}")
-		log.unindent
 	}
 }
