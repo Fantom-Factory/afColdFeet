@@ -23,7 +23,7 @@ internal class T_Module05 {
 	static Void contributeFileHandler(MappedConfig config) {
 		config[`/not-here/`] = `doc/`
 	}
-	@Contribute { serviceType=ServiceOverride# }
+	@Contribute { serviceType=ServiceOverrides# }
 	static Void contributeOverrides(MappedConfig config) {
 		config[DigestStrategy#] = FixedValueDigest("ver")
 	}

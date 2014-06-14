@@ -89,7 +89,7 @@ internal class T_Module04 {
 	static Void contributeFileHandler(MappedConfig config) {
 		config[`/doc/`] = `doc/`
 	}
-	@Contribute { serviceType=ServiceOverride# }
+	@Contribute { serviceType=ServiceOverrides# }
 	static Void contributeOverrides(MappedConfig config) {
 		config[DigestStrategy#] = FixedValueDigest("checksum")
         config["IocEnv"] 		= IocEnv.fromStr("Prod")
