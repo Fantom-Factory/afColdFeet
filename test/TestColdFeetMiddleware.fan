@@ -35,15 +35,15 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 	Void testRedirect() {
 		client.followRedirects.enabled = false
 		
-		res := client.get(`/coldfeet/whoops/doc/pod.fandoc`)
+		res := client.get(`/coldfeet/whoops/doc/pod.fdoc`)
 		verifyEq(res.statusCode, 308)
-		verifyEq(res.headers.location, `/coldFeet/checksum/doc/pod.fandoc`)
+		verifyEq(res.headers.location, `/coldFeet/checksum/doc/pod.fdoc`)
 	}
 
 	Void testFileIsServed() {
 		client.followRedirects.enabled = false
 		
-		res := client.get(`/coldFeet/checksum/doc/pod.fandoc`)
+		res := client.get(`/coldFeet/checksum/doc/pod.fdoc`)
 		verifyEq(res.statusCode, 200)
 		verify(res.asStr.startsWith("Overview [#overview]"))
 	}
@@ -51,15 +51,15 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 	Void testQueryParamsAreIgnored() {
 		client.followRedirects.enabled = true
 		
-		res := client.get(`/coldFeet/whoops/doc/pod.fandoc?wot`)
+		res := client.get(`/coldFeet/whoops/doc/pod.fdoc?wot`)
 		verifyEq(res.statusCode, 200)
 		verify(res.asStr.startsWith("Overview [#overview]"))
 
-		res = client.get(`/coldFeet/whoops/doc/pod.fandoc?wot&ever`)
+		res = client.get(`/coldFeet/whoops/doc/pod.fdoc?wot&ever`)
 		verifyEq(res.statusCode, 200)
 		verify(res.asStr.startsWith("Overview [#overview]"))
 
-		res = client.get(`/coldFeet/whoops/doc/pod.fandoc#wotever`)
+		res = client.get(`/coldFeet/whoops/doc/pod.fdoc#wotever`)
 		verifyEq(res.statusCode, 200)
 		verify(res.asStr.startsWith("Overview [#overview]"))
 	}
@@ -68,7 +68,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 		client.followRedirects.enabled = false
 		expiresInTenYears := DateTime.now.plus(365day * 10)
 		
-		res := client.get(`/coldFeet/checksum/doc/pod.fandoc`)
+		res := client.get(`/coldFeet/checksum/doc/pod.fdoc`)
 		verifyEq(res.statusCode, 200)
 		verifyEq(res.headers.expires.floor(1min).toHttpStr, expiresInTenYears.floor(1min).toHttpStr)
 	}

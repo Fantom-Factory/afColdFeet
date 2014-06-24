@@ -8,21 +8,21 @@ internal class TestConfigValidation : ColdFeetTest {
 	
 	Void testPrefixMustBePathOnly() {
 		server := BedServer(T_Module01#).addModule(ColdFeetModule#)
-		verifyErrTypeAndMsg(IocErr#, ErrMsgs.assetPrefixMustBePathOnly(`http://coldFeet/`)) {
+		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustBePathOnly(`http://coldFeet/`)) {
 			server.startup
 		}
 	}
 	
 	Void testPrefixMustStartWithSlash() {
 		server := BedServer(T_Module02#).addModule(ColdFeetModule#)
-		verifyErrTypeAndMsg(IocErr#, ErrMsgs.assetPrefixMustStartWithSlash(`coldFeet/`)) {
+		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustStartWithSlash(`coldFeet/`)) {
 			server.startup
 		}
 	}	
 	
 	Void testPrefixMustEndWithSlash() {
 		server := BedServer(T_Module03#).addModule(ColdFeetModule#)
-		verifyErrTypeAndMsg(IocErr#, ErrMsgs.assetPrefixMustEndWithSlash(`/coldFeet`)) {
+		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustEndWithSlash(`/coldFeet`)) {
 			server.startup
 		}
 	}	

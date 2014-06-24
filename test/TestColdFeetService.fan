@@ -1,20 +1,29 @@
 using afIoc
-using afIocConfig::ApplicationDefaults
+using afIocConfig
 using afBedSheet
-using afBounce::BedServer
+using afBounce
 
 internal class TestColdFeetService : ColdFeetTest {
+	BedServer? server
+	@Inject FileHandler? fileHandler
+	
+	override Void setup() {
+		server = BedServer(ColdFeetModule#).addModule(T_Module05#).startup
+		server.injectIntoFields(this)		
+	}
+	
+	override Void teardown() {
+		server.shutdown
+	}
 	
 	Void testAssetUri() {
-		coldFeet := (ColdFeet) BedServer(ColdFeetModule#).addModule(T_Module05#).startup.dependencyByType(ColdFeet#)
-		uri := coldFeet.fromClientUri(`/not-here/pod.fandoc`)
-		verifyEq(uri, `/coldFeet/ver/not-here/pod.fandoc`)
+		assFile := fileHandler.fromLocalUrl(`/not-here/pod.fdoc`)
+		verifyEq(assFile.clientUrl, `/coldFeet/ver/not-here/pod.fdoc`)
 	}	
 	
 	Void testAssetFile() {
-		coldFeet := (ColdFeet) BedServer(ColdFeetModule#).addModule(T_Module05#).startup.dependencyByType(ColdFeet#)
-		uri := coldFeet.fromServerFile(`doc/pod.fandoc`.toFile)
-		verifyEq(uri, `/coldFeet/ver/not-here/pod.fandoc`)
+		assFile := fileHandler.fromServerFile(`doc/pod.fdoc`.toFile)
+		verifyEq(assFile.clientUrl, `/coldFeet/ver/not-here/pod.fdoc`)
 	}
 }
 

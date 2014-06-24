@@ -2,14 +2,13 @@ using afIoc
 using afIocConfig
 using afBedSheet
 
-** The [Ioc]`http://www.fantomfactory.org/pods/afIoc` module class.
+** The [IoC]`http://www.fantomfactory.org/pods/afIoc` module class.
 ** 
 ** This class is public so it may be referenced explicitly in test code.
 @NoDoc
 const class ColdFeetModule {
 	
 	static Void bind(ServiceBinder binder) {
-		binder.bind(ColdFeet#)
 		binder.bind(ColdFeetMiddleware#)
 		binder.bind(DigestStrategy#, Adler32Digest#)
 	}
@@ -25,10 +24,25 @@ const class ColdFeetModule {
 		config[ColdFeetConfigIds.assetExpiresIn] 	= 365day * 10
 	}
 	
+	@Advise { serviceId="afBedSheet::FileHandler" }
+	static Void adviseFileHandler(MethodAdvisor[] methodAdvisors, DigestStrategy digestStrategy, IocConfigSource configSrc) {
+		assetPrefix	:= (Uri) configSrc.get("afColdFeet.assetPrefix", Uri#)
+		
+		methodAdvisors
+			.find { it.method.name == "toClientUrl" }
+			.addAdvice |invocation -> Obj?| {
+				localUrl 	:= (Uri)  invocation.args[0]
+				file	 	:= (File) invocation.args[1]
+				digest	 	:= digestStrategy.digest(file).toUri
+				clientUrl	:= assetPrefix.plusSlash + digest.plusSlash + localUrl.relTo(`/`)
+				invocation.args[0] = clientUrl
+				return invocation.invoke
+			} 
+	}
+	
 	@Contribute { serviceType=RegistryStartup# }
 	static Void contributeRegistryStartup(OrderedConfig conf, IocConfigSource iocConfig) {
-		conf.add |->| {
-			// validate asset prefix
+		conf.addOrdered("afColdFeet.validateAssetPrefix") |->| {
 			assetPrefix := (Uri) iocConfig.get(ColdFeetConfigIds.assetPrefix, Uri#)
 			if (!assetPrefix.isPathOnly)
 				throw ParseErr(ErrMsgs.assetPrefixMustBePathOnly(assetPrefix))
@@ -38,5 +52,4 @@ const class ColdFeetModule {
 				throw ParseErr(ErrMsgs.assetPrefixMustEndWithSlash(assetPrefix))
 		}
 	}
-
 }
