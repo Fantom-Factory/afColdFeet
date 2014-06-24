@@ -2,8 +2,7 @@ using afConcurrent
 using afIoc
 using afIocConfig
 using afIocEnv
-using afBedSheet::BedSheetMetaData
-using afBedSheet::FileMetaCache
+using afBedSheet
 
 ** Cold Feet's strategy for generating digests from a file. 
 const mixin DigestStrategy {
@@ -14,26 +13,25 @@ const mixin DigestStrategy {
 
 
 
-** A `DigestStrategy` that returns a [(url-safe) Base64]`http://tools.ietf.org/html/rfc4648#section-5` encoded CRC calculated with the [Adler32]`http://en.wikipedia.org/wiki/Adler32` algorithm.
+** `DigestStrategy` that returns a [(url-safe) Base64]`http://tools.ietf.org/html/rfc4648#section-5` encoded CRC calculated with the [Adler32]`http://en.wikipedia.org/wiki/Adler32` algorithm.
 ** This is the default strategy used by 'Cold Feet'.
 ** 
 ** The Adler32 checksum was designed for speed and created for use in the [zlib]`http://en.wikipedia.org/wiki/Zlib` compression library.
 const class Adler32Digest : DigestStrategy {
-	@Inject private const FileMetaCache fileCache
 	
 	new make(|This|in) { in(this) }
 
 	override Str digest(File file) {
 		// hang the digest off BedSheet's file cache - means we don't re-calculate the digest on every request
-		fileCache.get(file).cache.getOrAdd("coldFeet-digest") {
+//		fileCache.get(file).cache.getOrAdd("coldFeet-digest") {
 			Buf(4).writeI4(file.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
-		}
+//		}
 	}
 }
 
 
 
-** A `DigestStrategy` that returns the application's version number in production, and a random string in development.
+** `DigestStrategy` that returns the application's version number in production, and a random string in development.
 ** To use, override the default digest strategy in your 'AppModule':
 ** 
 ** pre>
@@ -58,7 +56,7 @@ const class AppVersionDigest : DigestStrategy {
 
 
 
-** A `DigestStrategy` that returns a constant value - use during testing. 
+** `DigestStrategy` that returns a constant value - use during testing. 
 ** To use, override the default digest strategy in your 'AppModule':
 ** 
 ** pre>

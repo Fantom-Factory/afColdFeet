@@ -3,7 +3,7 @@ using afBounce
 
 internal abstract class ColdFeetTest : Test {
 
-	protected Void verifyErrTypeAndMsg(Type errType, Str errMsg, |Obj| func) {
+	protected Void verifyErrMsg(Type errType, Str errMsg, |Obj| func) {
 		try {
 			func(69)
 		} catch (Err e) {

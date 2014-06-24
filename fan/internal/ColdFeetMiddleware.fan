@@ -3,7 +3,6 @@ using afIocConfig
 using afIocEnv
 using afBedSheet
 
-
 internal const class ColdFeetMiddleware : Middleware {
 
 	@Inject private const Log					log
@@ -13,7 +12,6 @@ internal const class ColdFeetMiddleware : Middleware {
 	@Inject private const FileHandler			fileHandler
 	@Inject private const ResponseProcessors	processors
 	@Inject private const IocEnv				iocEnv
-	@Inject private const ColdFeet				coldFeet
 	
 	@Config { id="afColdFeet.assetPrefix" }
 	@Inject private const Uri					assetPrefix 
@@ -32,11 +30,11 @@ internal const class ColdFeetMiddleware : Middleware {
 			uriNoPrefix	:= reqUri.toStr[assetPrefix.toStr.size..-1].toUri
 			uriDigest	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
 			assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)	
-			assetFile	:= fileHandler.fromClientUri(assetUri, true)	// this line may die!
-			assDigest	:= digestStrategy.digest(assetFile)
+			assetFile	:= fileHandler.fromLocalUrl(assetUri)	// this line may die!
+			assDigest	:= assetFile.clientUrl.getRange(1..1).toStr[0..<-1]
 	
 			if (uriDigest != assDigest) {
-				clientUri := coldFeet.clientUri(assDigest, assetUri)
+				clientUri := assetFile.clientUrl
 				referrer  := request.headers.referrer
 				log.warn(LogMsgs.assetRedirect(reqUri, assDigest, referrer))
 				return processors.processResponse(Redirect.movedPermanently(clientUri))
@@ -49,7 +47,7 @@ internal const class ColdFeetMiddleware : Middleware {
 			
 			return processors.processResponse(assetFile)
 			
-		} catch (Err e)
+		} catch
 			// if there's something wrong with the URI, return a 404
 			return pipeline.service
 	}
