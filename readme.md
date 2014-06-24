@@ -1,4 +1,4 @@
-## Overview
+## Overview 
 
 *Cold Feet is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
 
@@ -8,7 +8,7 @@
 - Don't want lame browser cache busting because you need network performance?
 - Then get `Cold Feet`!
 
-## Install
+## Install 
 
 Install `Cold Feet` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
@@ -16,13 +16,13 @@ Install `Cold Feet` with the Fantom Repository Manager ( [fanr](http://fantom.or
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afColdFeet 1.1+"]
+    depends = ["sys 1.0", ..., "afColdFeet 1.2+"]
 
-## Documentation
+## Documentation 
 
 Full API & fandocs are available on the [Status302 repository](http://repo.status302.com/doc/afColdFeet/).
 
-## Quick Start
+## Quick Start 
 
 1). Create a text file called `Example.fan`:
 
@@ -77,14 +77,14 @@ IoC Registry built in 612ms and started up in 104ms
 Bed App 'Unknown' listening on http://localhost:8080/
 ```
 
-3). Visit `http://localhost:8080/`:
+3). Visit `http://localhost:8080/`
 
 ```
 Normal URL   : /Example.fan
 Cold Feet URL: /coldFeet/YaT3ag==/Example.fan
 ```
 
-## Usage
+## Usage 
 
 Contribute your asset directories to the BedSheet [FileHandler](http://repo.status302.com/doc/afBedSheet/FileHandler.html) service as usual, but rather than hard-coding the asset URLs, let `Cold Feet` generate them for you.
 
@@ -101,15 +101,15 @@ If during those 10 years the asset is modified then the `Cold Feet` URL will cha
 
 The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"* Simple, `Cold Feet` recognises outdated URLs and responds with a `301 - Moved Permanently` redirecting the browser to the new asset URL.
 
-## What Usage?
+## What Usage? 
 
 Because `Cold Feet` works in the background, invisibly advising the `FileHandler` service, there is no *Cold Feet Usage* per se. You simply reference the [IoC Module](http://www.fantomfactory.org/pods/afIoc) and optionally configure a digest.
 
 Then use `FileHandler` to generate client URLs to use in your web pages.
 
-## Digest Strategies
+## Digest Strategies 
 
-### Adler-32
+### Adler-32 
 
 This is the default strategy used by `Cold Feet`. It calculates a digest with the [Adler-32](http://en.wikipedia.org/wiki/Adler32) checksum algorithm. The checksum is then Base-64 encoded using the [URL and filename safe alphabet](http://tools.ietf.org/html/rfc4648#section-5).
 
@@ -131,7 +131,7 @@ The browser will resolve `pretty.png` to be under the same digest path:
 
 This won't do any harm, as `Cold Feet` will simply redirect the browser to the correct URL, but the redirect is a wasted round trip. As each redirect creates a warning, monitor your logs to find any missed relative URLs and correct as necessary. If there are many, you may wish to preprocess your CSS files to generate the Cold Feet URLs before serving.
 
-### App Version
+### App Version 
 
 This simple strategy ignores the asset file in question and instead returns the application's pod version. Thus, when a new application is deployed (with an new version), clients will re-download all the assets.
 
@@ -148,7 +148,7 @@ class AppModule {
 }
 ```
 
-### Fixed Value
+### Fixed Value 
 
 Use this strategy in testing. It returns a fixed / constant value each and every time.
 

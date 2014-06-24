@@ -30,6 +30,8 @@ Quick Start [#quickStart]
 *************************
 1). Create a text file called 'Example.fan':
 pre>
+syntax: fantom
+
 using afIoc
 using afBedSheet
 using afColdFeet
@@ -79,7 +81,7 @@ IoC Registry built in 612ms and started up in 104ms
 Bed App 'Unknown' listening on http://localhost:8080/
 <pre
 
-3). Visit 'http://localhost:8080/':
+3). Visit 'http://localhost:8080/'
 pre>
 Normal URL   : /Example.fan
 Cold Feet URL: /coldFeet/YaT3ag==/Example.fan
