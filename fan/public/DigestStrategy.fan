@@ -22,10 +22,7 @@ const class Adler32Digest : DigestStrategy {
 	new make(|This|in) { in(this) }
 
 	override Str digest(File file) {
-		// hang the digest off BedSheet's file cache - means we don't re-calculate the digest on every request
-//		fileCache.get(file).cache.getOrAdd("coldFeet-digest") {
-			Buf(4).writeI4(file.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
-//		}
+		Buf(4).writeI4(file.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
 	}
 }
 
@@ -37,7 +34,7 @@ const class Adler32Digest : DigestStrategy {
 ** pre>
 ** class AppModule {
 **     @Contribute { serviceType=ServiceOverride# }
-**     static Void contributeOverrides(MappedConfig config) {
+**     static Void contributeOverrides(Configuration config) {
 **         config[DigestStrategy#] = AppVersionDigest()
 **     }
 ** }
@@ -45,8 +42,8 @@ const class Adler32Digest : DigestStrategy {
 const class AppVersionDigest : DigestStrategy {
 	private const Str appVersion
 	
-	new make(IocEnv iocEnv, BedSheetMetaData meta) {
-		this.appVersion = iocEnv.isDev ? Int.random.toHex(8)[0..8] : "v" + meta.appPod?.version?.segments?.join("-")
+	new make(IocEnv iocEnv, BedSheetServer bedServer) {
+		this.appVersion = iocEnv.isDev ? Int.random.toHex(8)[0..8] : "v" + bedServer.appPod?.version?.segments?.join("-")
 	}
 
 	override Str digest(File file) {
@@ -62,7 +59,7 @@ const class AppVersionDigest : DigestStrategy {
 ** pre>
 ** class AppModule {
 **     @Contribute { serviceType=ServiceOverride# }
-**     static Void contributeOverrides(MappedConfig config) {
+**     static Void contributeOverrides(Configuration config) {
 **         config[DigestStrategy#] = FixedValueDigest("wotever")
 **     }
 ** }

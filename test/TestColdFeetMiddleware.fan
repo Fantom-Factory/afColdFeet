@@ -66,11 +66,12 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 
 	Void testFarFutureHeader() {
 		client.followRedirects.enabled = false
-		expiresInTenYears := DateTime.now.plus(365day * 10)
+		expiresInTenYears := DateTime.now.plus(365day)
 		
 		res := client.get(`/coldFeet/checksum/doc/pod.fdoc`)
 		verifyEq(res.statusCode, 200)
 		verifyEq(res.headers.expires.floor(1min).toHttpStr, expiresInTenYears.floor(1min).toHttpStr)
+		verifyEq(res.headers.cacheControl, "public, max-age=${365day.toSec}")		
 	}
 
 	override Void setup() {
@@ -86,16 +87,16 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 
 internal class T_Module04 {
 	@Contribute { serviceType=FileHandler# }
-	static Void contributeFileHandler(MappedConfig config) {
+	static Void contributeFileHandler(Configuration config) {
 		config[`/doc/`] = `doc/`
 	}
 	@Contribute { serviceType=ServiceOverrides# }
-	static Void contributeOverrides(MappedConfig config) {
+	static Void contributeOverrides(Configuration config) {
 		config[DigestStrategy#] = FixedValueDigest("checksum")
         config["IocEnv"] 		= IocEnv.fromStr("Prod")
 	}
 	@Contribute { serviceType=Routes# }
-	internal static Void contributeRoutes(OrderedConfig config) {
+	internal static Void contributeRoutes(Configuration config) {
 		config.add(Route(`/index.html`, Text.fromPlain("Terminated")))
 	}
 }

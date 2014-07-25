@@ -11,6 +11,6 @@ const class ColdFeetConfigIds {
 
 	** A 'Duration' specifying how long clients should cache assets for. 
 	** 
-	** Defaults to an aggressive 10 years: '365day * 10'
+	** Defaults to an aggressive 1 year: '365day'
 	static const Str assetExpiresIn	:= "afColdFeet.assetExpiresIn"
 }

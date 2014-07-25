@@ -4,8 +4,8 @@ class Build : BuildPod {
 
 	new make() {
 		podName = "afColdFeet"
-		summary = "An asset caching strategy for your Bed App"
-		version = Version("1.2.1")
+		summary = "An asset caching strategy for your Bed Application"
+		version = Version("1.2.2")
 
 		meta = [
 			"proj.name"		: "Cold Feet",
@@ -21,16 +21,16 @@ class Build : BuildPod {
 			
 			// ---- Core ------------------------
 			"afConcurrent 1.0.6+", 
-			"afIoc 1.6.4+", 
-			"afIocConfig 1.0.8+", 
-			"afIocEnv 1.0.6+",
+			"afIoc 1.7.2+", 
+			"afIocConfig 1.0.10+", 
+			"afIocEnv 1.0.8+",
 			
 			// ---- Web -------------------------
-			"afBedSheet 1.3.10+",
+			"afBedSheet 1.3.12+",
 			
 			// ---- Test ------------------------
-			"afBounce 1.0.4+",
-			"afButter 1.0.0+"
+			"afBounce 1.0.10+",
+			"afButter 1.0.2+"
 		]
 		
 		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/internal/`]
