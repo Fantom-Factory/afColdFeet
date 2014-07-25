@@ -14,14 +14,14 @@ const class ColdFeetModule {
 	}
 
 	@Contribute { serviceType=MiddlewarePipeline# }
-	internal static Void contributeMiddlewarePipeline(OrderedConfig config, ColdFeetMiddleware middleware) {
-		config.addOrdered("ColdFeet", middleware, ["BEFORE: Routes"])
+	internal static Void contributeMiddlewarePipeline(Configuration config, ColdFeetMiddleware middleware) {
+		config.set("afColdFeet", middleware).before("afBedSheet.routes")
 	}
 	
 	@Contribute { serviceType=FactoryDefaults# }
-	static Void contributeFactoryDefaults(MappedConfig config) {
+	static Void contributeFactoryDefaults(Configuration config) {
 		config[ColdFeetConfigIds.assetPrefix] 		= `/coldFeet/`
-		config[ColdFeetConfigIds.assetExpiresIn] 	= 365day * 10
+		config[ColdFeetConfigIds.assetExpiresIn] 	= 365day
 	}
 	
 	@Advise { serviceId="afBedSheet::FileHandler" }
@@ -41,8 +41,8 @@ const class ColdFeetModule {
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
-	static Void contributeRegistryStartup(OrderedConfig conf, IocConfigSource iocConfig) {
-		conf.addOrdered("afColdFeet.validateAssetPrefix") |->| {
+	static Void contributeRegistryStartup(Configuration config, IocConfigSource iocConfig) {
+		config["afColdFeet.validateConfig"] = |->| {
 			assetPrefix := (Uri) iocConfig.get(ColdFeetConfigIds.assetPrefix, Uri#)
 			if (!assetPrefix.isPathOnly)
 				throw ParseErr(ErrMsgs.assetPrefixMustBePathOnly(assetPrefix))

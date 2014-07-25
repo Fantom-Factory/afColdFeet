@@ -29,11 +29,11 @@ internal class TestColdFeetService : ColdFeetTest {
 
 internal class T_Module05 {
 	@Contribute { serviceType=FileHandler# }
-	static Void contributeFileHandler(MappedConfig config) {
+	static Void contributeFileHandler(Configuration config) {
 		config[`/not-here/`] = `doc/`
 	}
 	@Contribute { serviceType=ServiceOverrides# }
-	static Void contributeOverrides(MappedConfig config) {
+	static Void contributeOverrides(Configuration config) {
 		config[DigestStrategy#] = FixedValueDigest("ver")
 	}
 }

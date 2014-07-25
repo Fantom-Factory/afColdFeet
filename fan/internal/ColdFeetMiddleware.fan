@@ -22,7 +22,7 @@ internal const class ColdFeetMiddleware : Middleware {
 	new make(|This|in) { in(this) }
 
 	override Bool service(MiddlewarePipeline pipeline) {
-		reqUri := request.modRel
+		reqUri := request.url
 		if (!reqUri.toStr.lower.startsWith(assetPrefix.toStr.lower) || reqUri.path.size <= 2)
 			return pipeline.service
 		
@@ -43,6 +43,7 @@ internal const class ColdFeetMiddleware : Middleware {
 			if (assetFile.exists && iocEnv.isProd) {
 				// yeah, a far future expiration header! 10 years baby!
 				response.headers.expires = DateTime.now.plus(expiresIn)
+				response.headers.cacheControl = "public, max-age=${expiresIn.toSec}"
 			}
 			
 			return processors.processResponse(assetFile)
