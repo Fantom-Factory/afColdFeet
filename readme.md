@@ -45,12 +45,12 @@ class Example {
 @SubModule { modules=[ColdFeetModule#] }
 class AppModule {
   @Contribute { serviceType=Routes# }
-  static Void contributeRoutes(OrderedConfig conf) {
+  static Void contributeRoutes(Configuration conf) {
     conf.add(Route(`/`, Example#coldFeetUris))
   }
 
   @Contribute { serviceType=FileHandler# }
-  static Void contributeFileHandler(MappedConfig config) {
+  static Void contributeFileHandler(Configuration config) {
     config[`/`] = `./`
   }
 }
@@ -70,7 +70,7 @@ C:\> fan Example.fan
   / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
  / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
 /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-          Alien-Factory BedSheet v1.3.10, IoC v1.6.4 /___/
+          Alien-Factory BedSheet v1.3.12, IoC v1.7.2 /___/
 
 IoC Registry built in 612ms and started up in 104ms
 
@@ -95,9 +95,9 @@ Contribute your asset directories to the BedSheet [FileHandler](http://repo.stat
 
 When a request is made for the asset using the modified URL, `Cold Feet` intercepts the request using [BedSheet](http://www.fantomfactory.org/pods/afBedSheet) middleware and serves up the file.
 
-`Cold Feet` lets the browser aggressively cache these files by setting a far-future expiration header on it (10 years by default). Note this expiration header is only enabled in production; see [IoC Env](http://www.fantomfactory.org/pods/IocEnv).
+`Cold Feet` lets the browser aggressively cache these files by setting a far-future expiration header on it (1 year by default). Note this expiration header is only enabled in production; see [IoC Env](http://www.fantomfactory.org/pods/IocEnv).
 
-If during those 10 years the asset is modified then the `Cold Feet` URL will change, just as the `XXXX` digest changes. This forces the browser to download the new asset.
+If during that 1 year the asset is modified then the `Cold Feet` URL will change, just as the `XXXX` digest changes. This forces the browser to download the new asset.
 
 The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"* Simple, `Cold Feet` recognises outdated URLs and responds with a `301 - Moved Permanently` redirecting the browser to the new asset URL.
 
@@ -142,7 +142,7 @@ To use, override the default digest strategy in your `AppModule`:
 ```
 class AppModule {
     @Contribute { serviceType=ServiceOverrides# }
-    static Void contributeOverrides(MappedConfig config) {
+    static Void contributeOverrides(Configuration config) {
         config[DigestStrategy#] = AppVersionDigest()
     }
 }
@@ -157,7 +157,7 @@ To use, override the default digest strategy in your `AppModule`:
 ```
 class AppModule {
     @Contribute { serviceType=ServiceOverrides# }
-    static Void contributeOverrides(MappedConfig config) {
+    static Void contributeOverrides(Configuration config) {
         config[DigestStrategy#] = FixedValueDigest("XXX")
     }
 }

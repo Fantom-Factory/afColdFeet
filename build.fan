@@ -12,7 +12,7 @@ class Build : BuildPod {
 			"afIoc.module"	: "afColdFeet::ColdFeetModule",
 			"internal"		: "true",
 			"tags"			: "web",
-			"repo.private"	: "true"
+			"repo.private"	: "false"
 		]
 
 		depends = [
