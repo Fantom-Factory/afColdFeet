@@ -21,12 +21,12 @@ class Build : BuildPod {
 			
 			// ---- Core ------------------------
 			"afConcurrent 1.0.6+", 
-			"afIoc 1.7.2+", 
-			"afIocConfig 1.0.10+", 
-			"afIocEnv 1.0.8+",
+			"afIoc 1.7.6+", 
+			"afIocConfig 1.0.12.1+", 
+			"afIocEnv 1.0.10.1+",
 			
 			// ---- Web -------------------------
-			"afBedSheet 1.3.12+",
+			"afBedSheet 1.3.13+",
 			
 			// ---- Test ------------------------
 			"afBounce 1.0.10+",

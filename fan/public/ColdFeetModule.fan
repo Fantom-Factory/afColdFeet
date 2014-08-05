@@ -20,13 +20,13 @@ const class ColdFeetModule {
 	
 	@Contribute { serviceType=FactoryDefaults# }
 	static Void contributeFactoryDefaults(Configuration config) {
-		config[ColdFeetConfigIds.assetPrefix] 		= `/coldFeet/`
-		config[ColdFeetConfigIds.assetExpiresIn] 	= 365day
+		config[ColdFeetConfigIds.urlPrefix]	= `/coldFeet/`
+		config[ColdFeetConfigIds.expiresIn]	= 365day
 	}
 	
-	@Advise { serviceId="afBedSheet::FileHandler" }
+	@Advise { serviceType=FileAssetCache# }
 	static Void adviseFileHandler(MethodAdvisor[] methodAdvisors, DigestStrategy digestStrategy, IocConfigSource configSrc) {
-		assetPrefix	:= (Uri) configSrc.get("afColdFeet.assetPrefix", Uri#)
+		assetPrefix	:= (Uri) configSrc.get("afColdFeet.urlPrefix", Uri#)
 		
 		methodAdvisors
 			.find { it.method.name == "toClientUrl" }
@@ -43,13 +43,13 @@ const class ColdFeetModule {
 	@Contribute { serviceType=RegistryStartup# }
 	static Void contributeRegistryStartup(Configuration config, IocConfigSource iocConfig) {
 		config["afColdFeet.validateConfig"] = |->| {
-			assetPrefix := (Uri) iocConfig.get(ColdFeetConfigIds.assetPrefix, Uri#)
-			if (!assetPrefix.isPathOnly)
-				throw ParseErr(ErrMsgs.assetPrefixMustBePathOnly(assetPrefix))
-			if (!assetPrefix.isPathAbs)
-				throw ParseErr(ErrMsgs.assetPrefixMustStartWithSlash(assetPrefix))
-			if (!assetPrefix.isDir)
-				throw ParseErr(ErrMsgs.assetPrefixMustEndWithSlash(assetPrefix))
+			urlPrefix := (Uri) iocConfig.get(ColdFeetConfigIds.urlPrefix, Uri#)
+			if (!urlPrefix.isPathOnly)
+				throw ParseErr(ErrMsgs.assetPrefixMustBePathOnly(urlPrefix))
+			if (!urlPrefix.isPathAbs)
+				throw ParseErr(ErrMsgs.assetPrefixMustStartWithSlash(urlPrefix))
+			if (!urlPrefix.isDir)
+				throw ParseErr(ErrMsgs.assetPrefixMustEndWithSlash(urlPrefix))
 		}
 	}
 }
