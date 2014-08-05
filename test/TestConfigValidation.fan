@@ -31,20 +31,20 @@ internal class TestConfigValidation : ColdFeetTest {
 internal class T_Module01 {
 	@Contribute { serviceType=ApplicationDefaults# }
 	static Void contributeAppDefaults(Configuration config) {
-		config[ColdFeetConfigIds.assetPrefix] = `http://coldFeet/`
+		config[ColdFeetConfigIds.urlPrefix] = `http://coldFeet/`
 	}
 }
 
 internal class T_Module02 {
 	@Contribute { serviceType=ApplicationDefaults# }
 	static Void contributeAppDefaults(Configuration config) {
-		config[ColdFeetConfigIds.assetPrefix] = `coldFeet/`
+		config[ColdFeetConfigIds.urlPrefix] = `coldFeet/`
 	}
 }
 
 internal class T_Module03 {
 	@Contribute { serviceType=ApplicationDefaults# }
 	static Void contributeAppDefaults(Configuration config) {
-		config[ColdFeetConfigIds.assetPrefix] = `/coldFeet`
+		config[ColdFeetConfigIds.urlPrefix] = `/coldFeet`
 	}
 }

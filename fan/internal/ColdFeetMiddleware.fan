@@ -10,29 +10,35 @@ internal const class ColdFeetMiddleware : Middleware {
 	@Inject private const HttpRequest			request
 	@Inject private const HttpResponse			response
 	@Inject private const FileHandler			fileHandler
+	@Inject private const PodHandler			podHandler
 	@Inject private const ResponseProcessors	processors
 	@Inject private const IocEnv				iocEnv
 	
-	@Config { id="afColdFeet.assetPrefix" }
-	@Inject private const Uri					assetPrefix 
+	@Config
+	@Inject private const Uri					urlPrefix 
 
-	@Config { id="afColdFeet.assetExpiresIn" }
+	@Config
 	@Inject private const Duration				expiresIn 
 	
 	new make(|This|in) { in(this) }
 
 	override Bool service(MiddlewarePipeline pipeline) {
 		reqUri := request.url
-		if (!reqUri.toStr.lower.startsWith(assetPrefix.toStr.lower) || reqUri.path.size <= 2)
+		if (!reqUri.toStr.lower.startsWith(urlPrefix.toStr.lower) || reqUri.path.size <= 2)
 			return pipeline.service
 		
 		try {
-			uriNoPrefix	:= reqUri.toStr[assetPrefix.toStr.size..-1].toUri
+			uriNoPrefix	:= reqUri.toStr[urlPrefix.toStr.size..-1].toUri
 			uriDigest	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
-			assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)	
-			assetFile	:= fileHandler.fromLocalUrl(assetUri)	// this line may die!
+			assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)
+
+			// this line may die!
+			assetFile	:=	podHandler.baseUrl != null && assetUri.toStr.startsWith(podHandler.baseUrl.toStr)
+						?	podHandler.fromLocalUrl(assetUri)
+						:	fileHandler.fromLocalUrl(assetUri)
+			
 			assDigest	:= assetFile.clientUrl.getRange(1..1).toStr[0..<-1]
-	
+
 			if (uriDigest != assDigest) {
 				clientUri := assetFile.clientUrl
 				referrer  := request.headers.referrer
@@ -41,7 +47,7 @@ internal const class ColdFeetMiddleware : Middleware {
 			}
 	
 			if (assetFile.exists && iocEnv.isProd) {
-				// yeah, a far future expiration header! 10 years baby!
+				// yeah, a far future expiration header! 1 year baby!
 				response.headers.expires = DateTime.now.plus(expiresIn)
 				response.headers.cacheControl = "public, max-age=${expiresIn.toSec}"
 			}
