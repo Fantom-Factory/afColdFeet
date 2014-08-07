@@ -3,11 +3,11 @@ using afBedSheet
 using afColdFeet
 
 class Example {
-  @Inject FileHandler? fileHandler
+  @Inject PodHandler? podHandler
 
-  Text coldFeetUris() {
-    asset := fileHandler.fromServerFile(`Example.fan`.toFile)
-    msg   := "Normal URL   : ${asset.localUrl} \n"
+  Text coldFeetUrls() {
+    asset := podHandler.fromPodResource(`fan://icons/x256/flux.png`)
+    msg   := "   Normal URL: ${asset.localUrl} \n"
     msg   += "Cold Feet URL: ${asset.clientUrl}\n"
     return Text.fromPlain(msg)
   }
@@ -16,13 +16,8 @@ class Example {
 @SubModule { modules=[ColdFeetModule#] }
 class AppModule {
   @Contribute { serviceType=Routes# }
-  static Void contributeRoutes(OrderedConfig conf) {
-    conf.add(Route(`/`, Example#coldFeetUris))
-  }
-
-  @Contribute { serviceType=FileHandler# }
-  static Void contributeFileHandler(MappedConfig config) {
-    config[`/`] = `./`
+  static Void contributeRoutes(Configuration conf) {
+    conf.add(Route(`/`, Example#coldFeetUrls))
   }
 }
 

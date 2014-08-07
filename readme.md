@@ -32,11 +32,11 @@ using afBedSheet
 using afColdFeet
 
 class Example {
-  @Inject FileHandler? fileHandler
+  @Inject PodHandler? podHandler
 
-  Text coldFeetUris() {
-    asset := fileHandler.fromServerFile(`Example.fan`.toFile)
-    msg   := "Normal URL   : ${asset.localUrl} \n"
+  Text coldFeetUrls() {
+    asset := podHandler.fromPodResource(`fan://icons/x256/flux.png`)
+    msg   := "   Normal URL: ${asset.localUrl} \n"
     msg   += "Cold Feet URL: ${asset.clientUrl}\n"
     return Text.fromPlain(msg)
   }
@@ -46,12 +46,7 @@ class Example {
 class AppModule {
   @Contribute { serviceType=Routes# }
   static Void contributeRoutes(Configuration conf) {
-    conf.add(Route(`/`, Example#coldFeetUris))
-  }
-
-  @Contribute { serviceType=FileHandler# }
-  static Void contributeFileHandler(Configuration config) {
-    config[`/`] = `./`
+    conf.add(Route(`/`, Example#coldFeetUrls))
   }
 }
 
@@ -70,7 +65,7 @@ C:\> fan Example.fan
   / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
  / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
 /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-          Alien-Factory BedSheet v1.3.12, IoC v1.7.2 /___/
+          Alien-Factory BedSheet v1.3.14, IoC v1.7.6 /___/
 
 IoC Registry built in 612ms and started up in 104ms
 
@@ -80,8 +75,8 @@ Bed App 'Unknown' listening on http://localhost:8080/
 3). Visit `http://localhost:8080/`
 
 ```
-Normal URL   : /Example.fan
-Cold Feet URL: /coldFeet/YaT3ag==/Example.fan
+Normal URL: /pods/icons/x256/flux.png
+d Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png<pre
 ```
 
 ## Usage 
@@ -103,9 +98,9 @@ The smart ones amongst you will be asking, *"But what if the browser requests an
 
 ## What Usage? 
 
-Because `Cold Feet` works in the background, invisibly advising the `FileHandler` service, there is no *Cold Feet Usage* per se. You simply reference the [IoC Module](http://www.fantomfactory.org/pods/afIoc) and optionally configure a digest.
+Because `Cold Feet` works in the background, invisibly advising the `FileHandler` and `PodHandler` services, there is no *Cold Feet Usage* per se. Just add `Cold Feet` as a project dependency and optionally configure a digest.
 
-Then use `FileHandler` to generate client URLs to use in your web pages.
+Then use `FileHandler` and `PodHandler` to generate client URLs to your files, and use them your web pages.
 
 ## Digest Strategies 
 

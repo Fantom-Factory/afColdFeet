@@ -25,7 +25,7 @@ const class ColdFeetModule {
 	}
 	
 	@Advise { serviceType=FileAssetCache# }
-	static Void adviseFileHandler(MethodAdvisor[] methodAdvisors, DigestStrategy digestStrategy, IocConfigSource configSrc) {
+	static Void adviseFileAssetCache(MethodAdvisor[] methodAdvisors, DigestStrategy digestStrategy, ConfigSource configSrc) {
 		assetPrefix	:= (Uri) configSrc.get("afColdFeet.urlPrefix", Uri#)
 		
 		methodAdvisors
@@ -41,7 +41,7 @@ const class ColdFeetModule {
 	}
 	
 	@Contribute { serviceType=RegistryStartup# }
-	static Void contributeRegistryStartup(Configuration config, IocConfigSource iocConfig) {
+	static Void contributeRegistryStartup(Configuration config, ConfigSource iocConfig) {
 		config["afColdFeet.validateConfig"] = |->| {
 			urlPrefix := (Uri) iocConfig.get(ColdFeetConfigIds.urlPrefix, Uri#)
 			if (!urlPrefix.isPathOnly)
