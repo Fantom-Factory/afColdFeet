@@ -71,7 +71,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 		res := client.get(`/coldFeet/checksum/doc/pod.fdoc`)
 		verifyEq(res.statusCode, 200)
 		verifyEq(res.headers.expires.floor(1min).toHttpStr, expiresInTenYears.floor(1min).toHttpStr)
-		verifyEq(res.headers.cacheControl, "public, max-age=${365day.toSec}")		
+		verifyEq(res.headers.cacheControl, "max-age=${365day.toSec}")		
 	}
 
 	override Void setup() {

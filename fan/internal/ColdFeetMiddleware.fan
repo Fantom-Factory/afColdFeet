@@ -49,7 +49,7 @@ internal const class ColdFeetMiddleware : Middleware {
 			if (assetFile.exists && iocEnv.isProd) {
 				// yeah, a far future expiration header! 1 year baby!
 				response.headers.expires = DateTime.now.plus(expiresIn)
-				response.headers.cacheControl = "public, max-age=${expiresIn.toSec}"
+				response.headers.cacheControl = "max-age=${expiresIn.toSec}"
 			}
 			
 			return processors.processResponse(assetFile)
