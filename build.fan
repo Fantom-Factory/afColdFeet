@@ -5,14 +5,14 @@ class Build : BuildPod {
 	new make() {
 		podName = "afColdFeet"
 		summary = "An asset caching strategy for your Bed Application"
-		version = Version("1.2.4")
+		version = Version("1.2.5")
 
 		meta = [
 			"proj.name"		: "Cold Feet",
 			"afIoc.module"	: "afColdFeet::ColdFeetModule",
 			"internal"		: "true",
 			"tags"			: "web",
-			"repo.private"	: "false"
+			"repo.private"	: "true"
 		]
 
 		depends = [
