@@ -94,7 +94,7 @@ When a request is made for the asset using the modified URL, `Cold Feet` interce
 
 If during that 1 year the asset is modified then the `Cold Feet` URL will change, just as the `XXXX` digest changes. This forces the browser to download the new asset.
 
-The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"* Simple, `Cold Feet` recognises outdated URLs and responds with a `301 - Moved Permanently` redirecting the browser to the new asset URL.
+The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"* Simple, `Cold Feet` recognises outdated URLs and responds with a `308 - Moved Permanently` redirecting the browser to the new asset URL.
 
 ## What Usage? 
 
@@ -151,9 +151,9 @@ To use, override the default digest strategy in your `AppModule`:
 
 ```
 class AppModule {
-    @Contribute { serviceType=ServiceOverrides# }
-    static Void contributeOverrides(Configuration config) {
-        config[DigestStrategy#] = FixedValueDigest("XXX")
+    @Override
+    static DigestStrategy overrideDigestStrategy() {
+        FixedValueDigest("XXX")
     }
 }
 ```
