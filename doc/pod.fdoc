@@ -105,7 +105,7 @@ If during that 1 year the asset is modified then the 'Cold Feet' URL will change
 This forces the browser to download the new asset.
 
 The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"*
-Simple, 'Cold Feet' recognises outdated URLs and responds with a '301 - Moved Permanently' redirecting the browser to the new
+Simple, 'Cold Feet' recognises outdated URLs and responds with a '308 - Moved Permanently' redirecting the browser to the new
 asset URL.
 
 
@@ -177,9 +177,9 @@ To use, override the default digest strategy in your 'AppModule':
 
 pre>
 class AppModule {
-    @Contribute { serviceType=ServiceOverrides# }
-    static Void contributeOverrides(Configuration config) {
-        config[DigestStrategy#] = FixedValueDigest("XXX")
+    @Override
+    static DigestStrategy overrideDigestStrategy() {
+        FixedValueDigest("XXX")
     }
 }
 <pre
@@ -188,6 +188,10 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.2.6 [#v1.2.6]
+----------------
+ - Chg: Updated to use [IoC 2.0.0]`pod:afIoc`.
+
 v1.2.4 [#v1.2.4]
 ----------------
  - New: Cold Feet now also provides an asset caching strategy for pod resources.

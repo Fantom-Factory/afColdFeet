@@ -32,8 +32,9 @@ internal class T_Module05 {
 	static Void contributeFileHandler(Configuration config) {
 		config[`/not-here/`] = `doc/`
 	}
-	@Contribute { serviceType=ServiceOverrides# }
-	static Void contributeOverrides(Configuration config) {
-		config[DigestStrategy#] = FixedValueDigest("ver")
+
+	@Override
+	static DigestStrategy overrideDigestStrategy() {
+		FixedValueDigest("ver")
 	}
 }

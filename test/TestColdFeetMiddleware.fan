@@ -90,11 +90,17 @@ internal class T_Module04 {
 	static Void contributeFileHandler(Configuration config) {
 		config[`/doc/`] = `doc/`
 	}
-	@Contribute { serviceType=ServiceOverrides# }
-	static Void contributeOverrides(Configuration config) {
-		config[DigestStrategy#] = FixedValueDigest("checksum")
-        config["IocEnv"] 		= IocEnv.fromStr("Prod")
+
+	@Override
+	static DigestStrategy overrideDigestStrategy() {
+		FixedValueDigest("checksum")
 	}
+
+	@Override
+	static IocEnv overrideIocEnv() {
+		IocEnv.fromStr("Prod")
+	}
+
 	@Contribute { serviceType=Routes# }
 	internal static Void contributeRoutes(Configuration config) {
 		config.add(Route(`/index.html`, Text.fromPlain("Terminated")))

@@ -7,10 +7,10 @@ using afBedSheet
 ** This class is public so it may be referenced explicitly in test code.
 @NoDoc
 const class ColdFeetModule {
-	
-	static Void bind(ServiceBinder binder) {
-		binder.bind(ColdFeetMiddleware#)
-		binder.bind(DigestStrategy#, Adler32Digest#)
+
+	static Void defineServices(ServiceDefinitions defs) {
+		defs.add(ColdFeetMiddleware#)
+		defs.add(DigestStrategy#, Adler32Digest#)
 	}
 
 	@Contribute { serviceType=MiddlewarePipeline# }

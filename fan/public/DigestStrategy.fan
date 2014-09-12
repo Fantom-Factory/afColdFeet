@@ -33,9 +33,9 @@ const class Adler32Digest : DigestStrategy {
 ** 
 ** pre>
 ** class AppModule {
-**     @Contribute { serviceType=ServiceOverride# }
-**     static Void contributeOverrides(Configuration config) {
-**         config[DigestStrategy#] = AppVersionDigest()
+** 	   @Override
+**     static DigestStrategy overrideDigestStrategy(IocEnv iocEnv, BedSheetServer bedServer) {
+** 	       AppVersionDigest(iocEnv, bedServer)
 **     }
 ** }
 ** <pre
@@ -58,9 +58,9 @@ const class AppVersionDigest : DigestStrategy {
 ** 
 ** pre>
 ** class AppModule {
-**     @Contribute { serviceType=ServiceOverride# }
-**     static Void contributeOverrides(Configuration config) {
-**         config[DigestStrategy#] = FixedValueDigest("wotever")
+** 	   @Override
+**     static DigestStrategy overrideDigestStrategy() {
+** 	       FixedValueDigest("wotever")
 **     }
 ** }
 ** <pre
