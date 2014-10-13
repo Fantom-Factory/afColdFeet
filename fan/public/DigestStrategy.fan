@@ -4,6 +4,7 @@ using afIocConfig
 using afIocEnv
 using afBedSheet
 
+** (Service) - 
 ** Cold Feet's strategy for generating digests from a file. 
 const mixin DigestStrategy {
 	

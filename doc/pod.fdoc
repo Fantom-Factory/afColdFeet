@@ -87,7 +87,7 @@ Cold Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png<pre
 Usage [#usage]
 **************
 Contribute your asset directories to the BedSheet [FileHandler]`afBedSheet::FileHandler` service as usual,
-but rather than hard-coding the asset URLs, let 'Cold Feet' generate them for you.
+but rather than hard-coding the asset URLs, let the 'FileHandler' service generate them for you.
 
 'Cold Feet' invisibly instruments the 'FileHandler' service to add a caching strategy to the generated client URLs.
 An asset URL such as '`/css/myStyles.css`' magically becomes a 'Cold Feet' URL like '`/coldFeet/XXXX/css/myStyles.css`', where:
@@ -117,6 +117,13 @@ Just add 'Cold Feet' as a project dependency and optionally configure a digest.
 
 Then use 'FileHandler' and 'PodHandler' to generate client URLs to your files, and use them your web pages.
 
+You may also prevent 'ColdFeet' from altering subsets of URLs by contributing regular expressions to 'UrlExclusions'.
+Example, to make 'ColdFeet' ignore all files in the directory 'images/':
+
+  @Contribute { serviceType=UrlExclusions# }
+  static Void contributeUrlExclusions(Configuration config) {
+      config.add("^/images/".toRegex)
+  }
 
 
 Digest Strategies [#digests]
@@ -188,6 +195,10 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.2.8 [#v1.2.8]
+----------------
+ - New: Contribute regular expressions to 'UrlExclusions' to exclude URLs from being handled / altered by ColdFeet.
+
 v1.2.6 [#v1.2.6]
 ----------------
  - Chg: Updated to use [IoC 2.0.0]`pod:afIoc`.

@@ -1,6 +1,6 @@
 
 ** [IoC Config]`http://www.fantomfactory.org/pods/afIocConfig` values for 'Cold Feet'.
-const class ColdFeetConfigIds {
+const mixin ColdFeetConfigIds {
 
 	** The prefix given to all URIs that are to be served by 'Cold Feet'. 
 	** All incoming requests starting with this URL are processed by 'Cold Feet'.
