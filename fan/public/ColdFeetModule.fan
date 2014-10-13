@@ -10,6 +10,8 @@ const class ColdFeetModule {
 
 	static Void defineServices(ServiceDefinitions defs) {
 		defs.add(ColdFeetMiddleware#)
+		defs.add(FileAssetCacheAdvice#)
+		defs.add(UrlExclusions#)
 		defs.add(DigestStrategy#, Adler32Digest#)
 	}
 
@@ -25,18 +27,11 @@ const class ColdFeetModule {
 	}
 	
 	@Advise { serviceType=FileAssetCache# }
-	static Void adviseFileAssetCache(MethodAdvisor[] methodAdvisors, DigestStrategy digestStrategy, ConfigSource configSrc) {
-		assetPrefix	:= (Uri) configSrc.get("afColdFeet.urlPrefix", Uri#)
-		
+	internal static Void adviseFileAssetCache(MethodAdvisor[] methodAdvisors, FileAssetCacheAdvice advice) {
 		methodAdvisors
 			.find { it.method.name == "toClientUrl" }
 			.addAdvice |invocation -> Obj?| {
-				localUrl 	:= (Uri)  invocation.args[0]
-				file	 	:= (File) invocation.args[1]
-				digest	 	:= digestStrategy.digest(file).toUri
-				clientUrl	:= assetPrefix.plusSlash + digest.plusSlash + localUrl.relTo(`/`)
-				invocation.args[0] = clientUrl
-				return invocation.invoke
+				advice.adviseToClientUrl(invocation)
 			} 
 	}
 	

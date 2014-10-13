@@ -81,7 +81,7 @@ d Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png<pre
 
 ## Usage 
 
-Contribute your asset directories to the BedSheet [FileHandler](http://repo.status302.com/doc/afBedSheet/FileHandler.html) service as usual, but rather than hard-coding the asset URLs, let `Cold Feet` generate them for you.
+Contribute your asset directories to the BedSheet [FileHandler](http://repo.status302.com/doc/afBedSheet/FileHandler.html) service as usual, but rather than hard-coding the asset URLs, let the `FileHandler` service generate them for you.
 
 `Cold Feet` invisibly instruments the `FileHandler` service to add a caching strategy to the generated client URLs. An asset URL such as ``/css/myStyles.css`` magically becomes a `Cold Feet` URL like ``/coldFeet/XXXX/css/myStyles.css``, where:
 
@@ -101,6 +101,13 @@ The smart ones amongst you will be asking, *"But what if the browser requests an
 Because `Cold Feet` works in the background, invisibly advising the `FileHandler` and `PodHandler` services, there is no *Cold Feet Usage* per se. Just add `Cold Feet` as a project dependency and optionally configure a digest.
 
 Then use `FileHandler` and `PodHandler` to generate client URLs to your files, and use them your web pages.
+
+You may also prevent `ColdFeet` from altering subsets of URLs by contributing regular expressions to `UrlExclusions`. Example, to make `ColdFeet` ignore all files in the directory `images/`:
+
+    @Contribute { serviceType=UrlExclusions# }
+    static Void contributeUrlExclusions(Configuration config) {
+        config.add("^/images/".toRegex)
+    }
 
 ## Digest Strategies 
 
