@@ -1,7 +1,5 @@
 ## Overview 
 
-*Cold Feet is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
-
 `Cold Feet` is an asset caching strategy for your [Bed App](http://www.fantomfactory.org/pods/afBedSheet).
 
 - Tired of telling clients to clear their browser cache to pick up the latest CSS and Javascript changes?
@@ -16,7 +14,7 @@ Install `Cold Feet` with the Fantom Repository Manager ( [fanr](http://fantom.or
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afColdFeet 1.2+"]
+    depends = ["sys 1.0", ..., "afColdFeet 1.3"]
 
 ## Documentation 
 
@@ -65,7 +63,7 @@ C:\> fan Example.fan
   / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
  / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
 /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-          Alien-Factory BedSheet v1.3.14, IoC v1.7.6 /___/
+           Alien-Factory BedSheet v1.4.0, IoC v2.0.0 /___/
 
 IoC Registry built in 612ms and started up in 104ms
 
@@ -75,8 +73,8 @@ Bed App 'Unknown' listening on http://localhost:8080/
 3). Visit `http://localhost:8080/`
 
 ```
-Normal URL: /pods/icons/x256/flux.png
-d Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png<pre
+.  Normal URL: /pods/icons/x256/flux.png
+Cold Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png
 ```
 
 ## Usage 
@@ -123,7 +121,7 @@ Note that if your CSS file has a relative URL in it, such as:
         background-image: url(../images/pretty.png);
     }
 
-Then, under Adler-32, it will be served under the wrong digest. This is because if your CSS file is served under:
+Then, under Adler-32 and path transformations, `pretty.png` will be served under the wrong digest. This is because if your CSS file is served under:
 
     /coldFeet/x9x9x9/css/styles.css
 
@@ -143,9 +141,9 @@ To use, override the default digest strategy in your `AppModule`:
 
 ```
 class AppModule {
-    @Contribute { serviceType=ServiceOverrides# }
-    static Void contributeOverrides(Configuration config) {
-        config[DigestStrategy#] = AppVersionDigest()
+    @Override
+    static DigestStrategy overrideDigestStrategy() {
+        AppVersionDigest()
     }
 }
 ```
@@ -161,6 +159,35 @@ class AppModule {
     @Override
     static DigestStrategy overrideDigestStrategy() {
         FixedValueDigest("XXX")
+    }
+}
+```
+
+## URL Transforming 
+
+You may customise the way URLs are transformed to and from ColdFeet URLs. To do so, implement and contribute a [UrlTransformer](http://repo.status302.com/doc/afColdFeet/UrlTransformer.html).
+
+### Path Transformer 
+
+This is the default URL transformation as detailed in the rest of the documentation. The ColdFeet prefix and digest are prepended to the URL as path segments:
+
+    /css/myStyle.css  --> /coldFeet/XXXX/css/myStyle.css
+
+### Name Transformer 
+
+If you don't like the idea of Cold Feet transforming the paths of your URLs, try transforming the name instead!
+
+The [NameTransformer](http://repo.status302.com/doc/afColdFeet/NameTransformer.html) inserts the ColdFeet prefix and digest into the name part of the URL, leaving the path alone:
+
+    /css/myStyle.css  --> /css/myStyle.coldFeet.XXXX.css
+
+To use, override the default URL transformer in your `AppModule`:
+
+```
+class AppModule {
+    @Override
+    static UrlTransformer overrideUrlTransformer(Registry registry) {
+        registry.autobuild(NameTransformer#)
     }
 }
 ```

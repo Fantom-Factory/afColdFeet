@@ -8,21 +8,21 @@ internal class TestConfigValidation : ColdFeetTest {
 	
 	Void testPrefixMustBePathOnly() {
 		server := BedServer(T_Module01#).addModule(ColdFeetModule#)
-		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustBePathOnly(`http://coldFeet/`)) {
+		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustBeUriName("http://coldFeet/")) {
 			server.startup
 		}
 	}
 	
 	Void testPrefixMustStartWithSlash() {
 		server := BedServer(T_Module02#).addModule(ColdFeetModule#)
-		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustStartWithSlash(`coldFeet/`)) {
+		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustBeUriName("coldFeet/")) {
 			server.startup
 		}
 	}	
 	
 	Void testPrefixMustEndWithSlash() {
 		server := BedServer(T_Module03#).addModule(ColdFeetModule#)
-		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustEndWithSlash(`/coldFeet`)) {
+		verifyErrMsg(IocErr#, ErrMsgs.assetPrefixMustBeUriName("/coldFeet")) {
 			server.startup
 		}
 	}	
@@ -31,20 +31,20 @@ internal class TestConfigValidation : ColdFeetTest {
 internal class T_Module01 {
 	@Contribute { serviceType=ApplicationDefaults# }
 	static Void contributeAppDefaults(Configuration config) {
-		config[ColdFeetConfigIds.urlPrefix] = `http://coldFeet/`
+		config[ColdFeetConfigIds.urlPrefix] = "http://coldFeet/"
 	}
 }
 
 internal class T_Module02 {
 	@Contribute { serviceType=ApplicationDefaults# }
 	static Void contributeAppDefaults(Configuration config) {
-		config[ColdFeetConfigIds.urlPrefix] = `coldFeet/`
+		config[ColdFeetConfigIds.urlPrefix] = "coldFeet/"
 	}
 }
 
 internal class T_Module03 {
 	@Contribute { serviceType=ApplicationDefaults# }
 	static Void contributeAppDefaults(Configuration config) {
-		config[ColdFeetConfigIds.urlPrefix] = `/coldFeet`
+		config[ColdFeetConfigIds.urlPrefix] = "/coldFeet"
 	}
 }

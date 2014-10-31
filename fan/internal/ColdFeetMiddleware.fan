@@ -6,44 +6,44 @@ using afBedSheet
 internal const class ColdFeetMiddleware : Middleware {
 
 	@Inject private const Log					log
-	@Inject private const DigestStrategy		digestStrategy
 	@Inject private const HttpRequest			request
 	@Inject private const HttpResponse			response
 	@Inject private const FileHandler			fileHandler
 	@Inject private const PodHandler			podHandler
 	@Inject private const ResponseProcessors	processors
 	@Inject private const IocEnv				iocEnv
+	@Inject private const UrlTransformer		urlTransformer
 	
-	@Config
-	@Inject private const Uri					urlPrefix 
-
 	@Config
 	@Inject private const Duration				expiresIn 
 	
 	new make(|This|in) { in(this) }
 
-	override Bool service(MiddlewarePipeline pipeline) {
-		reqUri := request.url
-		if (!reqUri.toStr.lower.startsWith(urlPrefix.toStr.lower) || reqUri.path.size <= 2)
-			return pipeline.service
+	override Void service(MiddlewarePipeline pipeline) {
+		reqUrl := request.url
+		
+		if (!urlTransformer.isColdFeet(reqUrl)) {
+			pipeline.service
+			return
+		}
 		
 		try {
-			uriNoPrefix	:= reqUri.toStr[urlPrefix.toStr.size..-1].toUri
-			uriDigest	:= uriNoPrefix.getRange(0..0).toStr[0..-2]
-			assetUri	:= uriNoPrefix.getRangeToPathAbs(1..-1)
+			assetUrl	:= urlTransformer.fromColdFeet(reqUrl)
 
-			// this line may die!
-			assetFile	:=	podHandler.baseUrl != null && assetUri.toStr.startsWith(podHandler.baseUrl.toStr)
-						?	podHandler.fromLocalUrl(assetUri)
-						:	fileHandler.fromLocalUrl(assetUri)
-			
-			assDigest	:= assetFile.clientUrl.getRange(1..1).toStr[0..<-1]
+			// is it a pod or a file resource? Note this is a crappy way to decide so this line may die...
+			assetFile	:=	podHandler.baseUrl != null && assetUrl.toStr.startsWith(podHandler.baseUrl.toStr)
+						?	podHandler.fromLocalUrl(assetUrl)
+						:	fileHandler.fromLocalUrl(assetUrl)
 
-			if (uriDigest != assDigest) {
+			urlDigest	:= urlTransformer.extractDigest(reqUrl)
+			assDigest	:= urlTransformer.extractDigest(assetFile.clientUrl)
+
+			if (urlDigest != assDigest) {
 				clientUri := assetFile.clientUrl
 				referrer  := request.headers.referrer
-				log.warn(LogMsgs.assetRedirect(reqUri, assDigest, referrer))
-				return processors.processResponse(Redirect.movedPermanently(clientUri))
+				log.warn(LogMsgs.assetRedirect(reqUrl, assDigest, referrer))
+				processors.processResponse(Redirect.movedPermanently(clientUri))
+				return
 			}
 	
 			if (assetFile.exists && iocEnv.isProd) {
@@ -52,10 +52,10 @@ internal const class ColdFeetMiddleware : Middleware {
 				response.headers.cacheControl = "max-age=${expiresIn.toSec}"
 			}
 			
-			return processors.processResponse(assetFile)
+			processors.processResponse(assetFile)
 			
 		} catch
 			// if there's something wrong with the URI, return a 404
-			return pipeline.service
+			pipeline.service
 	}
 }

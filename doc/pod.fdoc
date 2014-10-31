@@ -16,7 +16,7 @@ Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::T
 
 To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
 
-  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}+"]
+  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}"]
 
 
 
@@ -69,7 +69,7 @@ C:\> fan Example.fan
   / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
  / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
 /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-          Alien-Factory BedSheet v1.3.14, IoC v1.7.6 /___/
+           Alien-Factory BedSheet v1.4.0, IoC v2.0.0 /___/
 
 IoC Registry built in 612ms and started up in 104ms
 
@@ -78,8 +78,8 @@ Bed App 'Unknown' listening on http://localhost:8080/
 
 3). Visit 'http://localhost:8080/'
 pre>
-   Normal URL: /pods/icons/x256/flux.png
-Cold Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png<pre
+.  Normal URL: /pods/icons/x256/flux.png
+Cold Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png
 <pre
 
 
@@ -142,7 +142,7 @@ Note that if your CSS file has a relative URL in it, such as:
       background-image: url(../images/pretty.png);
   }
 
-Then, under Adler-32, it will be served under the wrong digest. This is because if your CSS file is served under:
+Then, under Adler-32 and path transformations, 'pretty.png' will be served under the wrong digest. This is because if your CSS file is served under:
 
   /coldFeet/x9x9x9/css/styles.css
 
@@ -167,9 +167,9 @@ To use, override the default digest strategy in your 'AppModule':
 
 pre>
 class AppModule {
-    @Contribute { serviceType=ServiceOverrides# }
-    static Void contributeOverrides(Configuration config) {
-        config[DigestStrategy#] = AppVersionDigest()
+    @Override
+    static DigestStrategy overrideDigestStrategy() {
+        AppVersionDigest()
     }
 }
 <pre
@@ -193,8 +193,47 @@ class AppModule {
 
 
 
+URL Transforming [#urlTransforming]
+***********************************
+You may customise the way URLs are transformed to and from ColdFeet URLs. To do so, implement and contribute a `UrlTransformer`.
+
+Path Transformer [#pathTransformer]
+===================================
+This is the default URL transformation as detailed in the rest of the documentation. 
+The ColdFeet prefix and digest are prepended to the URL as path segments: 
+
+  /css/myStyle.css  --> /coldFeet/XXXX/css/myStyle.css
+ 
+
+Name Transformer [#nameTransformer]
+=================================== 
+If you don't like the idea of Cold Feet transforming the paths of your URLs, try transforming the name instead!
+
+The `NameTransformer` inserts the ColdFeet prefix and digest into the name part of the URL, leaving the path alone:
+
+  /css/myStyle.css  --> /css/myStyle.coldFeet.XXXX.css
+
+To use, override the default URL transformer in your 'AppModule':
+
+pre>
+class AppModule {
+    @Override
+    static UrlTransformer overrideUrlTransformer(Registry registry) {
+        registry.autobuild(NameTransformer#)
+    }
+}
+<pre
+
+
+
 Release Notes [#releaseNotes]
 *****************************
+v1.3.0 [#v1.3.0]
+----------------
+ - New: Added 'UrlTransformer' service so ColdFeet URLs maybe anything you like!
+ - New: 'NameTransformer' as an alternative to transforming URL paths.
+ - Chg: Format of contributed 'urlPrefix' is no longer a /uri/ but a simple string. (Potential breaking change.)
+
 v1.2.8 [#v1.2.8]
 ----------------
  - New: Contribute regular expressions to 'UrlExclusions' to exclude URLs from being handled / altered by ColdFeet.

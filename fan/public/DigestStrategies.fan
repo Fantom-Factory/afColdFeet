@@ -20,8 +20,10 @@ const mixin DigestStrategy {
 ** The Adler32 checksum was designed for speed and created for use in the [zlib]`http://en.wikipedia.org/wiki/Zlib` compression library.
 const class Adler32Digest : DigestStrategy {
 	
+	@NoDoc // boring
 	new make(|This|in) { in(this) }
 
+	@NoDoc // boring
 	override Str digest(File file) {
 		Buf(4).writeI4(file.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
 	}
@@ -43,10 +45,12 @@ const class Adler32Digest : DigestStrategy {
 const class AppVersionDigest : DigestStrategy {
 	private const Str appVersion
 	
+	@NoDoc // boring
 	new make(IocEnv iocEnv, BedSheetServer bedServer) {
 		this.appVersion = iocEnv.isDev ? Int.random.toHex(8)[0..8] : "v" + bedServer.appPod?.version?.segments?.join("-")
 	}
 
+	@NoDoc // boring
 	override Str digest(File file) {
 		appVersion
 	}
@@ -68,10 +72,12 @@ const class AppVersionDigest : DigestStrategy {
 const class FixedValueDigest : DigestStrategy {
 	private const Str myDigest
 	
+	@NoDoc // boring
 	new make(Str digest) {
 		this.myDigest = digest
 	}
 
+	@NoDoc // boring
 	override Str digest(File file) {
 		this.myDigest
 	}
