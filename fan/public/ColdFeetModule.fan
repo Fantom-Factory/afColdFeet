@@ -13,6 +13,7 @@ const class ColdFeetModule {
 		defs.add(FileAssetCacheAdvice#)
 		defs.add(UrlExclusions#)
 		defs.add(DigestStrategy#, Adler32Digest#)
+		defs.add(UrlTransformer#, PathTransformer#)
 	}
 
 	@Contribute { serviceType=MiddlewarePipeline# }
@@ -22,7 +23,7 @@ const class ColdFeetModule {
 	
 	@Contribute { serviceType=FactoryDefaults# }
 	static Void contributeFactoryDefaults(Configuration config) {
-		config[ColdFeetConfigIds.urlPrefix]	= `/coldFeet/`
+		config[ColdFeetConfigIds.urlPrefix]	= "coldFeet"
 		config[ColdFeetConfigIds.expiresIn]	= 365day
 	}
 	
@@ -38,13 +39,9 @@ const class ColdFeetModule {
 	@Contribute { serviceType=RegistryStartup# }
 	static Void contributeRegistryStartup(Configuration config, ConfigSource iocConfig) {
 		config["afColdFeet.validateConfig"] = |->| {
-			urlPrefix := (Uri) iocConfig.get(ColdFeetConfigIds.urlPrefix, Uri#)
-			if (!urlPrefix.isPathOnly)
-				throw ParseErr(ErrMsgs.assetPrefixMustBePathOnly(urlPrefix))
-			if (!urlPrefix.isPathAbs)
-				throw ParseErr(ErrMsgs.assetPrefixMustStartWithSlash(urlPrefix))
-			if (!urlPrefix.isDir)
-				throw ParseErr(ErrMsgs.assetPrefixMustEndWithSlash(urlPrefix))
+			urlPrefix := (Str) iocConfig.get(ColdFeetConfigIds.urlPrefix, Str#)
+			if (!Uri.isName(urlPrefix))
+				throw ParseErr(ErrMsgs.assetPrefixMustBeUriName(urlPrefix))
 		}
 	}
 }
