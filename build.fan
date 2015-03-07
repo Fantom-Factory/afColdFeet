@@ -29,7 +29,7 @@ class Build : BuildPod {
 			
 			// ---- Test ------------------------
 			"afBounce     1.0.14 - 1.0",
-			"afButter     1.0.2  - 1.0"
+			"afButter     1.1.2  - 1.1"
 		]
 		
 		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/internal/`]

@@ -13,7 +13,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 	
 	Void testPassThrough() {
 		res := client.get(`/index.html`)
-		verifyEq(res.asStr, "Terminated")
+		verifyEq(res.body.str, "Terminated")
 	}
 
 	Void test404() {
@@ -45,7 +45,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 		
 		res := client.get(`/coldFeet/checksum/doc/pod.fdoc`)
 		verifyEq(res.statusCode, 200)
-		verify(res.asStr.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview [#overview]"))
 	}
 
 	Void testQueryParamsAreIgnored() {
@@ -53,15 +53,15 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 		
 		res := client.get(`/coldFeet/whoops/doc/pod.fdoc?wot`)
 		verifyEq(res.statusCode, 200)
-		verify(res.asStr.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview [#overview]"))
 
 		res = client.get(`/coldFeet/whoops/doc/pod.fdoc?wot&ever`)
 		verifyEq(res.statusCode, 200)
-		verify(res.asStr.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview [#overview]"))
 
 		res = client.get(`/coldFeet/whoops/doc/pod.fdoc#wotever`)
 		verifyEq(res.statusCode, 200)
-		verify(res.asStr.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview [#overview]"))
 	}
 
 	Void testFarFutureHeader() {
