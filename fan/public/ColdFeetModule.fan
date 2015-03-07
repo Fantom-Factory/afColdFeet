@@ -27,6 +27,12 @@ const class ColdFeetModule {
 		config[ColdFeetConfigIds.expiresIn]	= 365day
 	}
 	
+	@Contribute { serviceType=StackFrameFilter# }
+	static Void contributeStackFrameFilter(Configuration config) {
+		// remove meaningless and boring stack frames
+		config.add("^afColdFeet::ColdFeetMiddleware\$")
+	}
+
 	@Advise { serviceType=FileAssetCache# }
 	internal static Void adviseFileAssetCache(MethodAdvisor[] methodAdvisors, FileAssetCacheAdvice advice) {
 		methodAdvisors

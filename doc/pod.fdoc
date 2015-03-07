@@ -28,59 +28,55 @@ Full API & fandocs are available on the [Status302 repository]`http://repo.statu
 
 Quick Start [#quickStart]
 *************************
-1). Create a text file called 'Example.fan':
-pre>
-syntax: fantom
+1. Create a text file called 'Example.fan':
+    syntax: fantom
 
-using afIoc
-using afBedSheet
-using afColdFeet
+    using afIoc
+    using afBedSheet
+    using afColdFeet
 
-class Example {
-  @Inject PodHandler? podHandler
+    class Example {
+        @Inject PodHandler? podHandler
 
-  Text coldFeetUrls() {
-    asset := podHandler.fromPodResource(`fan://icons/x256/flux.png`)
-    msg   := "   Normal URL: ${asset.localUrl} \n"
-    msg   += "Cold Feet URL: ${asset.clientUrl}\n"
-    return Text.fromPlain(msg)
-  }
-}
+        Text coldFeetUrls() {
+            asset := podHandler.fromPodResource(`fan://icons/x256/flux.png`)
+            msg   := "   Normal URL: ${asset.localUrl} \n"
+            msg   += "Cold Feet URL: ${asset.clientUrl}\n"
+            return Text.fromPlain(msg)
+        }
+    }
 
-@SubModule { modules=[ColdFeetModule#] }
-class AppModule {
-  @Contribute { serviceType=Routes# }
-  static Void contributeRoutes(Configuration conf) {
-    conf.add(Route(`/`, Example#coldFeetUrls))
-  }
-}
+    @SubModule { modules=[ColdFeetModule#] }
+    class AppModule {
+        @Contribute { serviceType=Routes# }
+        static Void contributeRoutes(Configuration conf) {
+            conf.add(Route(`/`, Example#coldFeetUrls))
+        }
+    }
 
-class Main {
-  Int main() {
-    afBedSheet::Main().main([AppModule#.qname, "8080"])
-  }
-}
-<pre
+    class Main {
+        Int main() {
+            BedSheetBuilder(AppModule#.qname).startWisp(8080)
+        }
+    }
 
-2). Run 'Example.fan' as a Fantom script from the command line. This starts the [BedSheet]`pod:afBedSheet` app server:
-pre>
-C:\> fan Example.fan
-   ___    __                 _____        _
-  / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
- / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
-/_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
-           Alien-Factory BedSheet v1.4.0, IoC v2.0.0 /___/
+2. Run 'Example.fan' as a Fantom script from the command line. This starts the [BedSheet]`pod:afBedSheet` app server:
 
-IoC Registry built in 612ms and started up in 104ms
+    C:\> fan Example.fan
+       ___    __                 _____        _
+      / _ |  / /_____  _____    / ___/__  ___/ /_________  __ __
+     / _  | / // / -_|/ _  /===/ __// _ \/ _/ __/ _  / __|/ // /
+    /_/ |_|/_//_/\__|/_//_/   /_/   \_,_/__/\__/____/_/   \_, /
+               Alien-Factory BedSheet v1.4.8, IoC v2.0.6 /___/
 
-Bed App 'Unknown' listening on http://localhost:8080/
-<pre
+    IoC Registry built in 612ms and started up in 104ms
 
-3). Visit 'http://localhost:8080/'
-pre>
-.  Normal URL: /pods/icons/x256/flux.png
-Cold Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png
-<pre
+    Bed App 'Unknown' listening on http://localhost:8080/
+
+3. Visit 'http://localhost:8080/'
+
+    .  Normal URL: /pods/icons/x256/flux.png
+    Cold Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png
 
 
 
@@ -99,7 +95,7 @@ When a request is made for the asset using the modified URL, 'Cold Feet' interce
 [BedSheet]`pod:afBedSheet` middleware and serves up the file.
 
 'Cold Feet' lets the browser aggressively cache these files by setting a far-future expiration header on it (1 year by default).
-Note this expiration header is only enabled in production; see [IoC Env]`pod:IocEnv`.
+Note this expiration header is only enabled in production; see [IoC Env]`pod:afIocEnv`.
 
 If during that 1 year the asset is modified then the 'Cold Feet' URL will change, just as the 'XXXX' digest changes.
 This forces the browser to download the new asset.
@@ -128,6 +124,9 @@ Example, to make 'ColdFeet' ignore all files in the directory 'images/':
 
 Digest Strategies [#digests]
 ****************************
+
+
+
 Adler-32 [#adler32]
 ===================
 This is the default strategy used by 'Cold Feet'.
@@ -197,16 +196,19 @@ URL Transforming [#urlTransforming]
 ***********************************
 You may customise the way URLs are transformed to and from ColdFeet URLs. To do so, implement and contribute a `UrlTransformer`.
 
+
+
 Path Transformer [#pathTransformer]
 ===================================
-This is the default URL transformation as detailed in the rest of the documentation. 
-The ColdFeet prefix and digest are prepended to the URL as path segments: 
+This is the default URL transformation as detailed in the rest of the documentation.
+The ColdFeet prefix and digest are prepended to the URL as path segments:
 
   /css/myStyle.css  --> /coldFeet/XXXX/css/myStyle.css
- 
+
+
 
 Name Transformer [#nameTransformer]
-=================================== 
+===================================
 If you don't like the idea of Cold Feet transforming the paths of your URLs, try transforming the name instead!
 
 The `NameTransformer` inserts the ColdFeet prefix and digest into the name part of the URL, leaving the path alone:
@@ -228,60 +230,65 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.3.2 [#v1.3.2]
+================
+ - Chg: Added 'ColdFeetMiddleware' to BedSheet's 'StackFrameFilter' because it's boring!
+
 v1.3.0 [#v1.3.0]
-----------------
+================
  - New: Added 'UrlTransformer' service so ColdFeet URLs maybe anything you like!
  - New: 'NameTransformer' as an alternative to transforming URL paths.
  - Chg: Format of contributed 'urlPrefix' is no longer a /uri/ but a simple string. (Potential breaking change.)
 
 v1.2.8 [#v1.2.8]
-----------------
+================
  - New: Contribute regular expressions to 'UrlExclusions' to exclude URLs from being handled / altered by ColdFeet.
 
 v1.2.6 [#v1.2.6]
-----------------
+================
  - Chg: Updated to use [IoC 2.0.0]`pod:afIoc`.
 
 v1.2.4 [#v1.2.4]
-----------------
+================
  - New: Cold Feet now also provides an asset caching strategy for pod resources.
  - Chg: Updated to use [IoC 1.7.6]`pod:afIoc` and [BedSheet 1.3.14]`pod:afBedSheet`.
 
 v1.2.2 [#v1.2.2]
-----------------
+================
  - New: Added a far future 'Cache-Control' HTTP response header.
  - Chg: Updated to use [IoC 1.7.2]`pod:afIoc` and [BedSheet 1.3.12]`pod:afBedSheet`.
  - Chg: Reduced 'assetExpiresIn' to 1 year as per [RFC 2616 Guidelines]`http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.21`.
 
 v1.2.0 [#v1.2.0]
-----------------
+================
  - New: 'Cold Feet' now invisibly instruments / advises BedSheet's 'FileHandler' service so it returns asset caching URLs!
  - Chg: Removed 'ColdFeet' service as it is no longer needed. Use BedSheet's 'FileHandler' instead.
  - Chg: Updated to use [BedSheet 1.3.10]`pod:afBedSheet`.
 
 v1.1.4 [#v1.1.4]
-----------------
+================
  - New: Adler-32 digests are cached so they aren't re-calculated on every request. (Uses BedSheet's new 'FileMetaCache' service.)
  - Chg: Updated to use [BedSheet 1.3.8]`pod:afBedSheet`.
 
 v1.1.2 [#v1.1.2]
-----------------
+================
  - Chg: Updated to use [IoC 1.6.0]`pod:afIoc` and [BedSheet 1.3.6]`pod:afBedSheet`.
  - Bug: Urls with query params were not accepted.
  - Bug: Corrected problems with redirecting on incorrect digest.
 
 v1.1.0 [#v1.1.0]
-----------------
+================
  - New: Added the Alder-32 digest strategy.
  - Chg: Renamed 'ChecksumStrategy' -> 'DigestStrategy' and renamed the implmentations to suit.
  - Chg: Renamed the 'ColdFeet' service methods to match those in [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet`'s 'FileHandler'.
  - Chg: All redirects are logged as warnings (complete with the referer). This allows you to find any missed relative references.
 
 v1.0.0 [#v1.0.0]
-----------------
+================
  - New: Added 'assetExpiresIn' config value - defaults to 10 years.
  - Chg: Uses new 'FileHandler' methods in BedSheet 1.3.4.
 
 v0.0.2 [#v0.0.2]
-----------------
+================
  - New: Preview Release
+
