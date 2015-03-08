@@ -19,7 +19,7 @@ internal const class FileAssetCacheAdvice {
 				file := (File) invocation.args[1]
 				
 				// don't process dir urls ('cos wot do we digest on!?)
-				if (!file.isDir) {
+				if (!file.isDir && file.exists) {
 					digest	  := digestStrategy.digest(file)
 					clientUrl := urlTransformer.toColdFeet(localUrl, digest) 
 					invocation.args[0] = clientUrl
