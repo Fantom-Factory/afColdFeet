@@ -230,6 +230,10 @@ class AppModule {
 
 Release Notes [#releaseNotes]
 *****************************
+v1.3.4 [#v1.3.4]
+================
+ - Bug: Fixed the BedSheet 'StackFrameFilter' contribution. (D'Oh!)
+
 v1.3.2 [#v1.3.2]
 ================
  - Chg: Advice for 'FileAssetCache' no longer Err's if the file doesn't exist. (New in BedSheet 1.4.8)

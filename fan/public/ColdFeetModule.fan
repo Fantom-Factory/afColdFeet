@@ -30,7 +30,7 @@ const class ColdFeetModule {
 	@Contribute { serviceType=StackFrameFilter# }
 	static Void contributeStackFrameFilter(Configuration config) {
 		// remove meaningless and boring stack frames
-		config.add("^afColdFeet::ColdFeetMiddleware\$")
+		config.add("^afColdFeet::ColdFeetMiddleware.+\$")
 	}
 
 	@Advise { serviceType=FileAssetCache# }
