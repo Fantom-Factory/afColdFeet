@@ -1,5 +1,6 @@
 using afIoc
 using afIocConfig
+using afBedSheet
 
 internal const class FileAssetCacheAdvice {
 	
@@ -16,13 +17,14 @@ internal const class FileAssetCacheAdvice {
 			
 			// don't process invalid local urls
 			if (localUrl.host == null && localUrl.isRel) {
-				file := (File) invocation.args[1]
+				asset := (ClientAsset) invocation.args[1]
 				
-				// don't process dir urls ('cos wot do we digest on!?)
-				if (!file.isDir && file.exists) {
-					digest	  := digestStrategy.digest(file)
-					clientUrl := urlTransformer.toColdFeet(localUrl, digest) 
-					invocation.args[0] = clientUrl
+				if (asset.exists) {
+					digest := digestStrategy.digest(asset)
+					if (digest != null) {
+						coldFeetUrl := urlTransformer.toColdFeet(localUrl, digest) 
+						invocation.args[0] = coldFeetUrl
+					}
 				}
 			}
 		}
