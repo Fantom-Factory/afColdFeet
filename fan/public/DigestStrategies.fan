@@ -8,8 +8,10 @@ using afBedSheet
 ** Cold Feet's strategy for generating digests from a file. 
 const mixin DigestStrategy {
 	
-	** Return a digest for the given file. The digest must NOT contain the character '/'.
-	abstract Str digest(File file)
+	** Return a digest for the given InStream. The digest must NOT contain the character '/'.
+	** 
+	** May return 'null' if a digest is unavailable.
+	abstract Str? digest(ClientAsset clientAsset)
 }
 
 
@@ -24,8 +26,8 @@ const class Adler32Digest : DigestStrategy {
 	new make(|This|in) { in(this) }
 
 	@NoDoc // boring
-	override Str digest(File file) {
-		Buf(4).writeI4(file.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
+	override Str? digest(ClientAsset clientAsset) {
+		Buf(4).writeI4(clientAsset.in.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
 	}
 }
 
@@ -51,7 +53,7 @@ const class AppVersionDigest : DigestStrategy {
 	}
 
 	@NoDoc // boring
-	override Str digest(File file) {
+	override Str? digest(ClientAsset clientAsset) {
 		appVersion
 	}
 }
@@ -78,7 +80,7 @@ const class FixedValueDigest : DigestStrategy {
 	}
 
 	@NoDoc // boring
-	override Str digest(File file) {
+	override Str? digest(ClientAsset clientAsset) {
 		this.myDigest
 	}
 }

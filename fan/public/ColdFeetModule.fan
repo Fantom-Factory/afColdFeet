@@ -33,7 +33,7 @@ const class ColdFeetModule {
 		config.add("^afColdFeet::ColdFeetMiddleware.+\$")
 	}
 
-	@Advise { serviceType=FileAssetCache# }
+	@Advise { serviceType=ClientAssetCache# }
 	internal static Void adviseFileAssetCache(MethodAdvisor[] methodAdvisors, FileAssetCacheAdvice advice) {
 		methodAdvisors
 			.find { it.method.name == "toClientUrl" }
