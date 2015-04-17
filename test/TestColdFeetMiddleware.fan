@@ -75,6 +75,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 	}
 
 	override Void setup() {
+		super.setup
 		server 	= BedServer(ColdFeetModule#).addModule(T_Module04#).startup
 		server.injectIntoFields(this)
 		client	= server.makeClient

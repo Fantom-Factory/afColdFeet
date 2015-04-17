@@ -18,7 +18,7 @@ const class ColdFeetModule {
 
 	@Contribute { serviceType=MiddlewarePipeline# }
 	internal static Void contributeMiddlewarePipeline(Configuration config, ColdFeetMiddleware middleware) {
-		config.set("afColdFeet", middleware).before("afBedSheet.routes")
+		config.set("afColdFeet", middleware).before("afBedSheet.assets")
 	}
 	
 	@Contribute { serviceType=FactoryDefaults# }
