@@ -25,7 +25,7 @@ internal const class ColdFeetMiddleware : Middleware {
 			if (urlTransformer.isColdFeet(reqUrl)) {
 
 				assetUrl	:= urlTransformer.fromColdFeet(reqUrl)
-				assetFile	:= assetCache.getOrAdd(assetUrl, false)
+				assetFile	:= assetCache.getAndUpdateOrProduce(assetUrl)
 				if (assetFile != null) {
 
 					urlDigest	:= urlTransformer.extractDigest(reqUrl)

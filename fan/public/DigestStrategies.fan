@@ -27,7 +27,9 @@ const class Adler32Digest : DigestStrategy {
 
 	@NoDoc // boring
 	override Str? digest(ClientAsset clientAsset) {
-		Buf(4).writeI4(clientAsset.in.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
+		in := clientAsset.in
+		if (in == null)	return null
+		return Buf(4).writeI4(clientAsset.in.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
 	}
 }
 
