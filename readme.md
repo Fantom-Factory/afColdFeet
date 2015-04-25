@@ -1,7 +1,7 @@
-#Cold Feet v1.3.2
+#Cold Feet v1.3.4
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.3.2](http://img.shields.io/badge/pod-v1.3.2-yellow.svg)](http://www.fantomfactory.org/pods/afColdFeet)
+[![pod: v1.3.4](http://img.shields.io/badge/pod-v1.3.4-yellow.svg)](http://www.fantomfactory.org/pods/afColdFeet)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview

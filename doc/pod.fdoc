@@ -232,7 +232,7 @@ Release Notes [#releaseNotes]
 *****************************
 v1.3.4 [#v1.3.4]
 ================
- - Chg: 'DigestStrategies' now take a 'ClientAsset' and not a 'File'; a change to the BedSheet API.
+ - Chg: 'DigestStrategies' now take a 'ClientAsset' and not a 'File'; a change to the BedSheet API. (Breaking change.)
  - Chg: 'DigestStrategies' may return 'null' if a digest can't be computed. 
  - Chg: Updated to make use of the new 'ClientAssetCache' / 'Producer' API in BedSheet 1.4.10.
  - Bug: Fixed the BedSheet 'StackFrameFilter' contribution. (D'Oh!)
