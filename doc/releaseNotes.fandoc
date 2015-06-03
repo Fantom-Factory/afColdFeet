@@ -1,0 +1,73 @@
+Versions
+********
+
+v1.3.4
+======
+ - Chg: 'DigestStrategies' now take a 'ClientAsset' and not a 'File'; a change to the BedSheet API. (Breaking change.)
+ - Chg: 'DigestStrategies' may return 'null' if a digest can't be computed.
+ - Chg: Updated to make use of the new 'ClientAssetCache' / 'Producer' API in BedSheet 1.4.10.
+ - Bug: Fixed the BedSheet 'StackFrameFilter' contribution. (D'Oh!)
+
+v1.3.2
+======
+ - Chg: Advice for 'FileAssetCache' no longer Err's if the file doesn't exist. (New in BedSheet 1.4.8)
+ - Chg: Added 'ColdFeetMiddleware' to BedSheet's 'StackFrameFilter' because it's boring!
+
+v1.3.0
+======
+ - New: Added 'UrlTransformer' service so ColdFeet URLs maybe anything you like!
+ - New: 'NameTransformer' as an alternative to transforming URL paths.
+ - Chg: Format of contributed 'urlPrefix' is no longer a /uri/ but a simple string. (Potential breaking change.)
+
+v1.2.8
+======
+ - New: Contribute regular expressions to 'UrlExclusions' to exclude URLs from being handled / altered by ColdFeet.
+
+v1.2.6
+======
+ - Chg: Updated to use [IoC 2.0.0]`pod:afIoc`.
+
+v1.2.4
+======
+ - New: Cold Feet now also provides an asset caching strategy for pod resources.
+ - Chg: Updated to use [IoC 1.7.6]`pod:afIoc` and [BedSheet 1.3.14]`pod:afBedSheet`.
+
+v1.2.2
+======
+ - New: Added a far future 'Cache-Control' HTTP response header.
+ - Chg: Updated to use [IoC 1.7.2]`pod:afIoc` and [BedSheet 1.3.12]`pod:afBedSheet`.
+ - Chg: Reduced 'assetExpiresIn' to 1 year as per [RFC 2616 Guidelines]`http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.21`.
+
+v1.2.0
+======
+ - New: 'Cold Feet' now invisibly instruments / advises BedSheet's 'FileHandler' service so it returns asset caching URLs!
+ - Chg: Removed 'ColdFeet' service as it is no longer needed. Use BedSheet's 'FileHandler' instead.
+ - Chg: Updated to use [BedSheet 1.3.10]`pod:afBedSheet`.
+
+v1.1.4
+======
+ - New: Adler-32 digests are cached so they aren't re-calculated on every request. (Uses BedSheet's new 'FileMetaCache' service.)
+ - Chg: Updated to use [BedSheet 1.3.8]`pod:afBedSheet`.
+
+v1.1.2
+======
+ - Chg: Updated to use [IoC 1.6.0]`pod:afIoc` and [BedSheet 1.3.6]`pod:afBedSheet`.
+ - Bug: Urls with query params were not accepted.
+ - Bug: Corrected problems with redirecting on incorrect digest.
+
+v1.1.0
+======
+ - New: Added the Alder-32 digest strategy.
+ - Chg: Renamed 'ChecksumStrategy' -> 'DigestStrategy' and renamed the implmentations to suit.
+ - Chg: Renamed the 'ColdFeet' service methods to match those in [BedSheet]`pod:afBedSheet`'s 'FileHandler'.
+ - Chg: All redirects are logged as warnings (complete with the referer). This allows you to find any missed relative references.
+
+v1.0.0
+======
+ - New: Added 'assetExpiresIn' config value - defaults to 10 years.
+ - Chg: Uses new 'FileHandler' methods in BedSheet 1.3.4.
+
+v0.0.2
+======
+ - New: Preview Release
+

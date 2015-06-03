@@ -5,13 +5,13 @@ class Build : BuildPod {
 	new make() {
 		podName = "afColdFeet"
 		summary = "An asset caching strategy for your Bed Application"
-		version = Version("1.3.5")
+		version = Version("1.3.4")
 
 		meta = [
 			"proj.name"		: "Cold Feet",
 			"afIoc.module"	: "afColdFeet::ColdFeetModule",
-			"tags"			: "web",
-			"repo.private"	: "true"
+			"repo.tags"		: "web",
+			"repo.public"	: "true"
 		]
 
 		depends = [
@@ -33,7 +33,7 @@ class Build : BuildPod {
 		]
 		
 		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/internal/`]
-		resDirs = [,]
+		resDirs = [`doc/`,]
 	}
 	
 	@Target

@@ -1,5 +1,5 @@
 
-** [IoC Config]`http://www.fantomfactory.org/pods/afIocConfig` values for 'Cold Feet'.
+** [IoC Config]`pod:afIocConfig` values for 'Cold Feet'.
 const mixin ColdFeetConfigIds {
 
 	** The prefix given to all URIs that are to be served by 'Cold Feet'. 

@@ -1,5 +1,5 @@
-Overview [#overview]
-********************
+Overview
+********
 'Cold Feet' is an asset caching strategy for your [Bed App]`pod:afBedSheet`.
 
  - Tired of telling clients to clear their browser cache to pick up the latest CSS and Javascript changes?
@@ -8,26 +8,8 @@ Overview [#overview]
 
 
 
-Install [#install]
-******************
-Install '@{project.name}' with the Fantom Repository Manager ( [fanr]`docFanr::Tool.install` ):
-
-  C:\> fanr install -r http://repo.status302.com/fanr/ @{pod.name}
-
-To use in a [Fantom]`http://fantom.org/` project, add a dependency to 'build.fan':
-
-  depends = ["sys 1.0", ..., "@{pod.name} @{pod.version}"]
-
-
-
-Documentation [#documentation]
-******************************
-Full API & fandocs are available on the [Status302 repository]`http://repo.status302.com/doc/@{pod.name}/`.
-
-
-
-Quick Start [#quickStart]
-*************************
+Quick Start
+***********
 1. Create a text file called 'Example.fan':
     syntax: fantom
 
@@ -80,8 +62,8 @@ Quick Start [#quickStart]
 
 
 
-Usage [#usage]
-**************
+Usage
+*****
 Contribute your asset directories to the BedSheet [FileHandler]`afBedSheet::FileHandler` service as usual,
 but rather than hard-coding the asset URLs, let the 'FileHandler' service generate them for you.
 
@@ -101,13 +83,12 @@ If during that 1 year the asset is modified then the 'Cold Feet' URL will change
 This forces the browser to download the new asset.
 
 The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"*
-Simple, 'Cold Feet' recognises outdated URLs and responds with a '308 - Moved Permanently' redirecting the browser to the new
-asset URL.
+Simple, 'Cold Feet' recognises outdated URLs and responds with a '308 - Moved Permanently' redirecting the browser to the new asset URL.
 
 
 
-What Usage? [#whatUsage]
-************************
+What Usage?
+***********
 Because 'Cold Feet' works in the background, invisibly advising the 'FileHandler' and 'PodHandler' services, there is no *Cold Feet Usage* per se.
 Just add 'Cold Feet' as a project dependency and optionally configure a digest.
 
@@ -116,19 +97,18 @@ Then use 'FileHandler' and 'PodHandler' to generate client URLs to your files, a
 You may also prevent 'ColdFeet' from altering subsets of URLs by contributing regular expressions to 'UrlExclusions'.
 Example, to make 'ColdFeet' ignore all files in the directory 'images/':
 
+  syntax: fantom
   @Contribute { serviceType=UrlExclusions# }
   static Void contributeUrlExclusions(Configuration config) {
       config.add("^/images/".toRegex)
   }
 
 
-Digest Strategies [#digests]
-****************************
+Digest Strategies
+*****************
 
-
-
-Adler-32 [#adler32]
-===================
+Adler-32
+========
 This is the default strategy used by 'Cold Feet'.
 It calculates a digest with the [Adler-32]`http://en.wikipedia.org/wiki/Adler32` checksum algorithm.
 The checksum is then Base-64 encoded using the [URL and filename safe alphabet]`http://tools.ietf.org/html/rfc4648#section-5`.
@@ -137,6 +117,7 @@ The Adler-32 checksum was designed for speed and created for use in the [zlib]`h
 
 Note that if your CSS file has a relative URL in it, such as:
 
+  syntax: css
   .pretty-div {
       background-image: url(../images/pretty.png);
   }
@@ -155,16 +136,16 @@ If there are many, you may wish to preprocess your CSS files to generate the Col
 
 
 
-App Version [#appVersion]
-=========================
-This simple strategy ignores the asset file in question and instead returns the application's pod version.
-Thus, when a new application is deployed (with an new version), clients will re-download all the assets.
+App Version
+===========
+This simple strategy ignores the asset file in question and instead returns the application's pod version. Thus, when a new application is deployed (with an new version), clients will re-download all the assets.
 
 When not in production mode, the digest defaults to a random string.
 
 To use, override the default digest strategy in your 'AppModule':
 
 pre>
+syntax: fantom
 class AppModule {
     @Override
     static DigestStrategy overrideDigestStrategy() {
@@ -175,8 +156,8 @@ class AppModule {
 
 
 
-Fixed Value [#fixedValue]
-=========================
+Fixed Value
+===========
 Use this strategy in testing. It returns a fixed / constant value each and every time.
 
 To use, override the default digest strategy in your 'AppModule':
@@ -192,14 +173,14 @@ class AppModule {
 
 
 
-URL Transforming [#urlTransforming]
-***********************************
+URL Transforming
+****************
 You may customise the way URLs are transformed to and from ColdFeet URLs. To do so, implement and contribute a `UrlTransformer`.
 
 
 
-Path Transformer [#pathTransformer]
-===================================
+Path Transformer
+================
 This is the default URL transformation as detailed in the rest of the documentation.
 The ColdFeet prefix and digest are prepended to the URL as path segments:
 
@@ -207,8 +188,8 @@ The ColdFeet prefix and digest are prepended to the URL as path segments:
 
 
 
-Name Transformer [#nameTransformer]
-===================================
+Name Transformer
+================
 If you don't like the idea of Cold Feet transforming the paths of your URLs, try transforming the name instead!
 
 The `NameTransformer` inserts the ColdFeet prefix and digest into the name part of the URL, leaving the path alone:
@@ -218,6 +199,7 @@ The `NameTransformer` inserts the ColdFeet prefix and digest into the name part 
 To use, override the default URL transformer in your 'AppModule':
 
 pre>
+syntax: fantom
 class AppModule {
     @Override
     static UrlTransformer overrideUrlTransformer(Registry registry) {
@@ -225,78 +207,4 @@ class AppModule {
     }
 }
 <pre
-
-
-
-Release Notes [#releaseNotes]
-*****************************
-v1.3.4 [#v1.3.4]
-================
- - Chg: 'DigestStrategies' now take a 'ClientAsset' and not a 'File'; a change to the BedSheet API. (Breaking change.)
- - Chg: 'DigestStrategies' may return 'null' if a digest can't be computed. 
- - Chg: Updated to make use of the new 'ClientAssetCache' / 'Producer' API in BedSheet 1.4.10.
- - Bug: Fixed the BedSheet 'StackFrameFilter' contribution. (D'Oh!)
-
-v1.3.2 [#v1.3.2]
-================
- - Chg: Advice for 'FileAssetCache' no longer Err's if the file doesn't exist. (New in BedSheet 1.4.8)
- - Chg: Added 'ColdFeetMiddleware' to BedSheet's 'StackFrameFilter' because it's boring!
-
-v1.3.0 [#v1.3.0]
-================
- - New: Added 'UrlTransformer' service so ColdFeet URLs maybe anything you like!
- - New: 'NameTransformer' as an alternative to transforming URL paths.
- - Chg: Format of contributed 'urlPrefix' is no longer a /uri/ but a simple string. (Potential breaking change.)
-
-v1.2.8 [#v1.2.8]
-================
- - New: Contribute regular expressions to 'UrlExclusions' to exclude URLs from being handled / altered by ColdFeet.
-
-v1.2.6 [#v1.2.6]
-================
- - Chg: Updated to use [IoC 2.0.0]`pod:afIoc`.
-
-v1.2.4 [#v1.2.4]
-================
- - New: Cold Feet now also provides an asset caching strategy for pod resources.
- - Chg: Updated to use [IoC 1.7.6]`pod:afIoc` and [BedSheet 1.3.14]`pod:afBedSheet`.
-
-v1.2.2 [#v1.2.2]
-================
- - New: Added a far future 'Cache-Control' HTTP response header.
- - Chg: Updated to use [IoC 1.7.2]`pod:afIoc` and [BedSheet 1.3.12]`pod:afBedSheet`.
- - Chg: Reduced 'assetExpiresIn' to 1 year as per [RFC 2616 Guidelines]`http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.21`.
-
-v1.2.0 [#v1.2.0]
-================
- - New: 'Cold Feet' now invisibly instruments / advises BedSheet's 'FileHandler' service so it returns asset caching URLs!
- - Chg: Removed 'ColdFeet' service as it is no longer needed. Use BedSheet's 'FileHandler' instead.
- - Chg: Updated to use [BedSheet 1.3.10]`pod:afBedSheet`.
-
-v1.1.4 [#v1.1.4]
-================
- - New: Adler-32 digests are cached so they aren't re-calculated on every request. (Uses BedSheet's new 'FileMetaCache' service.)
- - Chg: Updated to use [BedSheet 1.3.8]`pod:afBedSheet`.
-
-v1.1.2 [#v1.1.2]
-================
- - Chg: Updated to use [IoC 1.6.0]`pod:afIoc` and [BedSheet 1.3.6]`pod:afBedSheet`.
- - Bug: Urls with query params were not accepted.
- - Bug: Corrected problems with redirecting on incorrect digest.
-
-v1.1.0 [#v1.1.0]
-================
- - New: Added the Alder-32 digest strategy.
- - Chg: Renamed 'ChecksumStrategy' -> 'DigestStrategy' and renamed the implmentations to suit.
- - Chg: Renamed the 'ColdFeet' service methods to match those in [BedSheet]`http://www.fantomfactory.org/pods/afBedSheet`'s 'FileHandler'.
- - Chg: All redirects are logged as warnings (complete with the referer). This allows you to find any missed relative references.
-
-v1.0.0 [#v1.0.0]
-================
- - New: Added 'assetExpiresIn' config value - defaults to 10 years.
- - Chg: Uses new 'FileHandler' methods in BedSheet 1.3.4.
-
-v0.0.2 [#v0.0.2]
-================
- - New: Preview Release
 
