@@ -4,6 +4,8 @@
 ** 
 ** Example, to ignore all local URLs in the directory 'images/':
 ** 
+**   syntax:fantom
+** 
 **   @Contribute { serviceType=UrlExclusions# }
 **   static Void contributeUrlExclusions(Configuration config) {
 **       config.add("^/images/".toRegex)

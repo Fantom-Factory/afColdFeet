@@ -66,6 +66,7 @@ const class AppVersionDigest : DigestStrategy {
 ** To use, override the default digest strategy in your 'AppModule':
 ** 
 ** pre>
+** syntax: fantom
 ** class AppModule {
 ** 	   @Override
 **     static DigestStrategy overrideDigestStrategy() {
