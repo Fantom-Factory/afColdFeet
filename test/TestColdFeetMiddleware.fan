@@ -35,40 +35,40 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 	Void testRedirect() {
 		client.followRedirects.enabled = false
 		
-		res := client.get(`/coldfeet/whoops/doc/pod.fdoc`)
+		res := client.get(`/coldfeet/whoops/doc/pod.fandoc`)
 		verifyEq(res.statusCode, 308)
-		verifyEq(res.headers.location, `/coldFeet/checksum/doc/pod.fdoc`)
+		verifyEq(res.headers.location, `/coldFeet/checksum/doc/pod.fandoc`)
 	}
 
 	Void testFileIsServed() {
 		client.followRedirects.enabled = false
 		
-		res := client.get(`/coldFeet/checksum/doc/pod.fdoc`)
+		res := client.get(`/coldFeet/checksum/doc/pod.fandoc`)
 		verifyEq(res.statusCode, 200)
-		verify(res.body.str.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview\n********\n"))
 	}
 
 	Void testQueryParamsAreIgnored() {
 		client.followRedirects.enabled = true
 		
-		res := client.get(`/coldFeet/whoops/doc/pod.fdoc?wot`)
+		res := client.get(`/coldFeet/whoops/doc/pod.fandoc?wot`)
 		verifyEq(res.statusCode, 200)
-		verify(res.body.str.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview\n********\n"))
 
-		res = client.get(`/coldFeet/whoops/doc/pod.fdoc?wot&ever`)
+		res = client.get(`/coldFeet/whoops/doc/pod.fandoc?wot&ever`)
 		verifyEq(res.statusCode, 200)
-		verify(res.body.str.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview\n********\n"))
 
-		res = client.get(`/coldFeet/whoops/doc/pod.fdoc#wotever`)
+		res = client.get(`/coldFeet/whoops/doc/pod.fandoc#wotever`)
 		verifyEq(res.statusCode, 200)
-		verify(res.body.str.startsWith("Overview [#overview]"))
+		verify(res.body.str.startsWith("Overview\n********\n"))
 	}
 
 	Void testFarFutureHeader() {
 		client.followRedirects.enabled = false
 		expiresInTenYears := DateTime.now.plus(365day)
 		
-		res := client.get(`/coldFeet/checksum/doc/pod.fdoc`)
+		res := client.get(`/coldFeet/checksum/doc/pod.fandoc`)
 		verifyEq(res.statusCode, 200)
 		verifyEq(res.headers.expires.floor(1min).toHttpStr, expiresInTenYears.floor(1min).toHttpStr)
 		verifyEq(res.headers.cacheControl, "max-age=${365day.toSec}")		
@@ -86,7 +86,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 	}
 }
 
-internal class T_Module04 {
+internal const class T_Module04 {
 	@Contribute { serviceType=FileHandler# }
 	static Void contributeFileHandler(Configuration config) {
 		config[`/doc/`] = `doc/`

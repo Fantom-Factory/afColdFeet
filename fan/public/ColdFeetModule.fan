@@ -8,12 +8,14 @@ using afBedSheet
 @NoDoc
 const class ColdFeetModule {
 
-	static Void defineServices(ServiceDefinitions defs) {
-		defs.add(ColdFeetMiddleware#)
-		defs.add(FileAssetCacheAdvice#)
-		defs.add(UrlExclusions#)
-		defs.add(DigestStrategy#, Adler32Digest#)
-		defs.add(UrlTransformer#, PathTransformer#)
+	static Void defineServices(RegistryBuilder defs) {
+		defs.addService(ColdFeetMiddleware#)
+		defs.addService(UrlExclusions#)
+		defs.addService(DigestStrategy#, Adler32Digest#)
+		defs.addService(UrlTransformer#, PathTransformer#)
+		
+		// hook into BedSheet
+		defs.overrideService(ClientAssetCache#.qname).withImplType(ColdFeetAssetCache#).withOverrideId(ColdFeetAssetCache#.qname)
 	}
 
 	@Contribute { serviceType=MiddlewarePipeline# }
@@ -32,18 +34,8 @@ const class ColdFeetModule {
 		// remove meaningless and boring stack frames
 		config.add("^afColdFeet::ColdFeetMiddleware.+\$")
 	}
-
-	@Advise { serviceType=ClientAssetCache# }
-	internal static Void adviseFileAssetCache(MethodAdvisor[] methodAdvisors, FileAssetCacheAdvice advice) {
-		methodAdvisors
-			.find { it.method.name == "toClientUrl" }
-			.addAdvice |invocation -> Obj?| {
-				advice.adviseToClientUrl(invocation)
-			} 
-	}
 	
-	@Contribute { serviceType=RegistryStartup# }
-	static Void contributeRegistryStartup(Configuration config, ConfigSource iocConfig) {
+	static Void onRegistryStartup(Configuration config, ConfigSource iocConfig) {
 		config["afColdFeet.validateConfig"] = |->| {
 			urlPrefix := (Str) iocConfig.get(ColdFeetConfigIds.urlPrefix, Str#)
 			if (!Uri.isName(urlPrefix))

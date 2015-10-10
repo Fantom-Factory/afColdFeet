@@ -1,6 +1,10 @@
 Versions
 ********
 
+v1.4.0
+======
+ - Chg: Updated to work with [IoC v3]`pod:afIoc` and  [BedSheet 1.5]`pod:afBedSheet`. (Breaking change.)
+
 v1.3.4
 ======
  - Chg: 'DigestStrategies' now take a 'ClientAsset' and not a 'File'; a change to the BedSheet API. (Breaking change.)

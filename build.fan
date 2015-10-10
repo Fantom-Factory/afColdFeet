@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afColdFeet"
 		summary = "An asset caching strategy for your Bed Application"
-		version = Version("1.3.4")
+		version = Version("1.4.0")
 
 		meta = [
 			"proj.name"		: "Cold Feet",
@@ -14,22 +14,26 @@ class Build : BuildPod {
 			"repo.public"	: "true"
 		]
 
+		index = [
+			"afIoc.module"	: "afColdFeet::ColdFeetModule" 
+		]
+
 		depends = [
 			"sys 1.0", 
 			"concurrent 1.0", 
 			
 			// ---- Core ------------------------
-			"afConcurrent 1.0.8  - 1.0", 
-			"afIoc        2.0.6  - 2.0", 
-			"afIocConfig  1.0.16 - 1.0", 
-			"afIocEnv     1.0.18 - 1.0",
+			"afConcurrent 1.0.12 - 1.0", 
+			"afIoc        3.0.0  - 3.0", 
+			"afIocConfig  1.1.0  - 1.1", 
+			"afIocEnv     1.1.0  - 1.1",
 			
 			// ---- Web -------------------------
-			"afBedSheet   1.4.10 - 1.4",
+			"afBedSheet   1.5.0  - 1.5",
 			
 			// ---- Test ------------------------
-			"afBounce     1.0.20 - 1.0",
-			"afButter     1.1.2  - 1.1"
+			"afBounce     1.1.0  - 1.1",
+			"afButter     1.1.10 - 1.1"
 		]
 		
 		srcDirs = [`test/`, `fan/`, `fan/public/`, `fan/internal/`]
