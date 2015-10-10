@@ -17,17 +17,17 @@ internal class TestColdFeetService : ColdFeetTest {
 	}
 	
 	Void testAssetUri() {
-		assFile := fileHandler.fromLocalUrl(`/not-here/pod.fdoc`)
-		verifyEq(assFile.clientUrl, `/coldFeet/ver/not-here/pod.fdoc`)
+		assFile := fileHandler.fromLocalUrl(`/not-here/pod.fandoc`)
+		verifyEq(assFile.clientUrl, `/coldFeet/ver/not-here/pod.fandoc`)
 	}	
 	
 	Void testAssetFile() {
-		assFile := fileHandler.fromServerFile(`doc/pod.fdoc`.toFile)
-		verifyEq(assFile.clientUrl, `/coldFeet/ver/not-here/pod.fdoc`)
+		assFile := fileHandler.fromServerFile(`doc/pod.fandoc`.toFile)
+		verifyEq(assFile.clientUrl, `/coldFeet/ver/not-here/pod.fandoc`)
 	}
 }
 
-internal class T_Module05 {
+internal const class T_Module05 {
 	@Contribute { serviceType=FileHandler# }
 	static Void contributeFileHandler(Configuration config) {
 		config[`/not-here/`] = `doc/`
