@@ -1,7 +1,7 @@
-#Cold Feet v1.3.4
+#Cold Feet v1.4.0
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.3.4](http://img.shields.io/badge/pod-v1.3.4-yellow.svg)](http://www.fantomfactory.org/pods/afColdFeet)
+[![pod: v1.4.0](http://img.shields.io/badge/pod-v1.4.0-yellow.svg)](http://www.fantomfactory.org/pods/afColdFeet)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -16,11 +16,11 @@
 
 Install `Cold Feet` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
 
-    C:\> fanr install -r http://repo.status302.com/fanr/ afColdFeet
+    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afColdFeet
 
 To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afColdFeet 1.3"]
+    depends = ["sys 1.0", ..., "afColdFeet 1.4"]
 
 ## Documentation
 
