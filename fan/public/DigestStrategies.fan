@@ -21,7 +21,7 @@ const mixin DigestStrategy {
 ** 
 ** The Adler32 checksum was designed for speed and created for use in the [zlib]`http://en.wikipedia.org/wiki/Zlib` compression library.
 const class Adler32Digest : DigestStrategy {
-	
+
 	@NoDoc // boring
 	new make(|This|in) { in(this) }
 
@@ -29,7 +29,7 @@ const class Adler32Digest : DigestStrategy {
 	override Str? digest(ClientAsset clientAsset) {
 		in := clientAsset.in
 		if (in == null)	return null
-		return Buf(4).writeI4(clientAsset.in.readAllBuf.crc("CRC-32-Adler")).toBase64.replace("+", "-").replace("/", "_")
+		return Buf(4).writeI4(clientAsset.in.readAllBuf.crc("CRC-32-Adler")).toBase64Uri
 	}
 }
 
