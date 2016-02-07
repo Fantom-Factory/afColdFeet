@@ -35,7 +35,10 @@ internal const class ColdFeetMiddleware : Middleware {
 						clientUri := assetFile.clientUrl
 						referrer  := request.headers.referrer
 						log.warn(LogMsgs.assetRedirect(reqUrl, assDigest, referrer))
-						processors.processResponse(Redirect.movedPermanently(clientUri))
+						// decided to hold off using HTTP 308 due to this:
+						// http://insanecoding.blogspot.co.uk/2014/02/http-308-incompetence-expected.html
+						// I was never *that* keen on a permanent redirect anyway
+						processors.processResponse(Redirect.movedTemporarily(clientUri))
 						return
 					}
 
