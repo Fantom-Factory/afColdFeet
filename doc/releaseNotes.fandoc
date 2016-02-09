@@ -6,6 +6,7 @@ v1.4.0
  - Chg: Updated to work with [IoC v3]`pod:afIoc` and  [BedSheet 1.5]`pod:afBedSheet`. (Breaking change.)
  - Chg: Old digest redirects are now temporary, not permanent - see [HTTP 308 Incompetence]`http://insanecoding.blogspot.co.uk/2014/02/http-308-incompetence-expected.html`.
  - Chg: Alder-32 checksum are now Base64Uri encoded - new in Fantom 1.0.68.
+ - Bug: 'Adler32Digest' didn't close file input streams, causing file locks on Windows.
 
 v1.3.4
 ======
