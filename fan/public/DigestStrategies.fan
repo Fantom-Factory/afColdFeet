@@ -29,7 +29,7 @@ const class Adler32Digest : DigestStrategy {
 	override Str? digest(ClientAsset clientAsset) {
 		in := clientAsset.in
 		if (in == null)	return null
-		return Buf(4).writeI4(clientAsset.in.readAllBuf.crc("CRC-32-Adler")).toBase64Uri
+		return Buf(4).writeI4(in.readAllBuf.crc("CRC-32-Adler")).toBase64Uri
 	}
 }
 
