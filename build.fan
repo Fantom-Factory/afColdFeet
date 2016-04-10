@@ -5,13 +5,13 @@ class Build : BuildPod {
 	new make() {
 		podName = "afColdFeet"
 		summary = "An asset caching strategy for your Bed Application"
-		version = Version("1.4.0")
+		version = Version("1.4.1")
 
 		meta = [
 			"proj.name"		: "Cold Feet",
 			"afIoc.module"	: "afColdFeet::ColdFeetModule",
 			"repo.tags"		: "web",
-			"repo.public"	: "true"
+			"repo.public"	: "false"
 		]
 
 		index = [
