@@ -14,9 +14,9 @@ class Example {
 }
 
 @SubModule { modules=[ColdFeetModule#] }
-class AppModule {
+const class AppModule {
     @Contribute { serviceType=Routes# }
-    static Void contributeRoutes(Configuration conf) {
+    Void contributeRoutes(Configuration conf) {
         conf.add(Route(`/`, Example#coldFeetUrls))
     }
 }

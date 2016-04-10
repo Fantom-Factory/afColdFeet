@@ -9,7 +9,7 @@ internal class TestColdFeetService : ColdFeetTest {
 	
 	override Void setup() {
 		server = BedServer(ColdFeetModule#).addModule(T_Module05#).startup
-		server.injectIntoFields(this)		
+		server.inject(this)		
 	}
 	
 	override Void teardown() {
@@ -29,12 +29,12 @@ internal class TestColdFeetService : ColdFeetTest {
 
 internal const class T_Module05 {
 	@Contribute { serviceType=FileHandler# }
-	static Void contributeFileHandler(Configuration config) {
+	Void contributeFileHandler(Configuration config) {
 		config[`/not-here/`] = `doc/`
 	}
 
 	@Override
-	static DigestStrategy overrideDigestStrategy() {
+	DigestStrategy overrideDigestStrategy() {
 		FixedValueDigest("ver")
 	}
 }

@@ -38,13 +38,7 @@ class Build : BuildPod {
 		
 		srcDirs = [`fan/`, `fan/internal/`, `fan/public/`, `test/`]
 		resDirs = [`doc/`,]
-	}
-	
-	@Target
-	override Void compile() {
-		// remove test pods from final build
-		testPods := "afBounce afButter".split
-		depends = depends.exclude { testPods.contains(it.split.first) }
-		super.compile
+		
+		meta["afBuild.testPods"]	= "afBounce afButter"
 	}
 }

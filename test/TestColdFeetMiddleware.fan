@@ -77,7 +77,7 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 	override Void setup() {
 		super.setup
 		server 	= BedServer(ColdFeetModule#).addModule(T_Module04#).startup
-		server.injectIntoFields(this)
+		server.inject(this)
 		client	= server.makeClient
 	}
 	
@@ -88,22 +88,22 @@ internal class TestColdFeetMiddleware : ColdFeetTest {
 
 internal const class T_Module04 {
 	@Contribute { serviceType=FileHandler# }
-	static Void contributeFileHandler(Configuration config) {
+	Void contributeFileHandler(Configuration config) {
 		config[`/doc/`] = `doc/`
 	}
 
 	@Override
-	static DigestStrategy overrideDigestStrategy() {
+	DigestStrategy overrideDigestStrategy() {
 		FixedValueDigest("checksum")
 	}
 
 	@Override
-	static IocEnv overrideIocEnv() {
+	IocEnv overrideIocEnv() {
 		IocEnv.fromStr("Prod")
 	}
 
 	@Contribute { serviceType=Routes# }
-	internal static Void contributeRoutes(Configuration config) {
+	internal Void contributeRoutes(Configuration config) {
 		config.add(Route(`/index.html`, Text.fromPlain("Terminated")))
 	}
 }

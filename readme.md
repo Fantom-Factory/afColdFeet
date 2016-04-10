@@ -46,9 +46,9 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
         }
         
         @SubModule { modules=[ColdFeetModule#] }
-        class AppModule {
+        const class AppModule {
             @Contribute { serviceType=Routes# }
-            static Void contributeRoutes(Configuration conf) {
+            Void contributeRoutes(Configuration conf) {
                 conf.add(Route(`/`, Example#coldFeetUrls))
             }
         }
@@ -77,7 +77,7 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
 3. Visit `http://localhost:8080/`
 
         .  Normal URL: /pods/icons/x256/flux.png
-        Cold Feet URL: /coldFeet/infYBQ==/pods/icons/x256/flux.png
+        Cold Feet URL: /coldFeet/infYBQ/pods/icons/x256/flux.png
 
 
 
@@ -96,7 +96,7 @@ When a request is made for the asset using the modified URL, `Cold Feet` interce
 
 If during that 1 year the asset is modified then the `Cold Feet` URL will change, just as the `XXXX` digest changes. This forces the browser to download the new asset.
 
-The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"* Simple, `Cold Feet` recognises outdated URLs and responds with a `308 - Moved Permanently` redirecting the browser to the new asset URL.
+The smart ones amongst you will be asking, *"But what if the browser requests an old asset URL?"* Simple, `Cold Feet` recognises outdated URLs and responds with a `307 - Moved Temporarily` redirecting the browser to the new asset URL. (See [HTTP 308 Incompetence](http://insanecoding.blogspot.co.uk/2014/02/http-308-incompetence-expected.html) for an understanding of why a 308 is not given.)
 
 ## What Usage?
 
@@ -107,7 +107,7 @@ Then use `FileHandler` and `PodHandler` to generate client URLs to your files, a
 You may also prevent `ColdFeet` from altering subsets of URLs by contributing regular expressions to `UrlExclusions`. Example, to make `ColdFeet` ignore all files in the directory `images/`:
 
     @Contribute { serviceType=UrlExclusions# }
-    static Void contributeUrlExclusions(Configuration config) {
+    Void contributeUrlExclusions(Configuration config) {
         config.add("^/images/".toRegex)
     }
 
@@ -146,7 +146,7 @@ To use, override the default digest strategy in your `AppModule`:
 ```
 class AppModule {
     @Override
-    static DigestStrategy overrideDigestStrategy() {
+    DigestStrategy overrideDigestStrategy() {
         AppVersionDigest()
     }
 }
@@ -161,7 +161,7 @@ To use, override the default digest strategy in your `AppModule`:
 ```
 class AppModule {
     @Override
-    static DigestStrategy overrideDigestStrategy() {
+    DigestStrategy overrideDigestStrategy() {
         FixedValueDigest("XXX")
     }
 }
@@ -190,7 +190,7 @@ To use, override the default URL transformer in your `AppModule`:
 ```
 class AppModule {
     @Override
-    static UrlTransformer overrideUrlTransformer(Registry registry) {
+    UrlTransformer overrideUrlTransformer(Registry registry) {
         registry.autobuild(NameTransformer#)
     }
 }
