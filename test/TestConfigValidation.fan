@@ -30,21 +30,21 @@ internal class TestConfigValidation : ColdFeetTest {
 
 internal const class T_Module01 {
 	@Contribute { serviceType=ApplicationDefaults# }
-	static Void contributeAppDefaults(Configuration config) {
+	Void contributeAppDefaults(Configuration config) {
 		config[ColdFeetConfigIds.urlPrefix] = "http://coldFeet/"
 	}
 }
 
 internal const class T_Module02 {
 	@Contribute { serviceType=ApplicationDefaults# }
-	static Void contributeAppDefaults(Configuration config) {
+	Void contributeAppDefaults(Configuration config) {
 		config[ColdFeetConfigIds.urlPrefix] = "coldFeet/"
 	}
 }
 
 internal const class T_Module03 {
 	@Contribute { serviceType=ApplicationDefaults# }
-	static Void contributeAppDefaults(Configuration config) {
+	Void contributeAppDefaults(Configuration config) {
 		config[ColdFeetConfigIds.urlPrefix] = "/coldFeet"
 	}
 }
