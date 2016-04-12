@@ -32,8 +32,8 @@ class Build : BuildPod {
 			"afBedSheet   1.5.0  - 1.5",
 			
 			// ---- Test ------------------------
-			"afBounce     1.1.0  - 1.1",
-			"afButter     1.1.10 - 1.1"
+			"afBounce     1.1.0 - 1.1",
+			"afButter     1.2.0 - 1.2"
 		]
 		
 		srcDirs = [`fan/`, `fan/internal/`, `fan/public/`, `test/`]
